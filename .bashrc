@@ -168,7 +168,7 @@ export BRO_STATION=/home/janaki/.bro
 export WORKSTATION=/home/janaki/projects
 source /home/janaki/.bro/activate
 
-export API_KEY='AIzaSyDXvdF3vaZ2H3u5dS7uMqVeySKG78KANKsgUDU'
+export API_KEY='AIzaSyDXvdF3vaZHudSuMqVeySKG78KANKsgUDU'
 export ASSISTANT_DIR=/home/janaki/dotdot/assistant/
 alias assistant='bash "$ASSISTANT_DIR"assistant.sh'
 export PATH="$PATH:/opt/mssql-tools/bin"

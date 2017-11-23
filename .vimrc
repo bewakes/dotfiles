@@ -30,6 +30,8 @@ set foldnestmax=5
 set foldlevelstart=99
 set foldcolumn=0
 set colorcolumn=80             " Ruler for maximum characters
+set cursorline
+set list                       " Show invisible characters
 
 augroup vimrcFold
   " fold vimrc itself by categories
@@ -124,6 +126,9 @@ Plug 'eagletmt/ghcmod-vim', { 'for': 'haskell' }
 Plug 'eagletmt/neco-ghc', { 'for': 'haskell' }
 Plug 'Twinside/vim-hoogle', { 'for': 'haskell' }
 Plug 'mpickering/hlint-refactor-vim', { 'for': 'haskell' }
+
+" Python
+Plug 'nvie/vim-flake8'
 
 " Colorscheme
 Plug 'vim-scripts/wombat256.vim'
@@ -292,6 +297,7 @@ augroup sourcing
   endif
 augroup END
 
+
 " Open file prompt with current path
 nmap <leader>e :e <C-R>=expand("%:p:h") . '/'<CR>
 
@@ -313,9 +319,9 @@ set expandtab
 
 " 1 tab == 2 spaces, unless the file is already
 " using tabs, in which case tabs will be inserted.
-set shiftwidth=2
-set softtabstop=2
-set tabstop=2
+set shiftwidth=4                " Number of space insert/remove
+set softtabstop=4               " Number of spaces in tab when editing
+set tabstop=4                   " Number of visual spaces per TAB
 
 " Linebreak on 500 characters
 set lbr
@@ -604,7 +610,6 @@ endfunction
 nmap ;r :call Run()<cr>
 " }}}
 
-
 " Custom mappings {{{
 imap fk <Esc>
 imap FK <Esc>
@@ -632,6 +637,8 @@ nmap ;t :vsplit term://bash<CR>i
 nmap ;g <C-]>
 nmap ;b <C-t>
 
+" haskell linter
+nnoremap <leader>h :Neomake hlint<CR>
 " for terminal mode
 " tnoremap <C-n> <C-\><C-n>
 " }}}
