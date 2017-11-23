@@ -1,0 +1,11 @@
+Config { font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true"
+       , bgColor = "#111111"
+       , fgColor = "grey"
+       , position = TopW L 100
+       , commands = [
+            Run TIL "" "til" 6000
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%til%"
+}

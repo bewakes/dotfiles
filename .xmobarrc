@@ -1,0 +1,28 @@
+Config { font = "xft:Bitstream Vera Sans Mono:bold:size=8:antialias=true"
+       , bgColor = "#222222"
+       , fgColor = "grey"
+       , position = BottomW L 100
+       , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Swap [] 10
+                    , Run Date "<fc=#338899>%a %b %d</fc> <fc=cyan>%H:%M:%S</fc>" "date" 10
+                    , Run StdinReader
+                    , Run Battery ["-t", "Batt: <acstatus>", "-L", "15",
+                        "-H", "70", "--low","red", "--normal", "orange",
+                        "--high", "green", "--" -- battery specific options
+                                       -- discharging status
+                                       , "-o"	, "<left>%(<timeleft>)"
+                                       -- AC "on" status
+                                       , "-O"	, "<fc=#dAA520>Charging</fc>"
+                                       -- charged status
+                                       , "-i"	, "<fc=#006000>Charged</fc>"] 10
+                    , Run Kbd [ ("us(dvorak)" , "<fc=#00008B>DV</fc>")
+                        , ("us"         , "<fc=#ee0000>US</fc>")
+                      ]
+                    , Run GetIP "e" "ethIp" 20
+                    , Run GetIP "w" "wanIp" 20
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%StdinReader% }{WAN: <fc=green>%wanIp%</fc>|LAN: <fc=green>%ethIp%</fc>|%battery%|%cpu%|%memory%|%swap%|%date% [<fc=#773366>%kbd%</fc>] "
+       }
