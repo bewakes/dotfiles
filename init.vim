@@ -53,7 +53,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'neomake/neomake'
 Plug 'Shougo/deoplete.nvim'
 "Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'junegunn/fzf'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 Plug 'junegunn/fzf.vim'
 Plug 'mileszs/ack.vim'
 
@@ -91,6 +91,8 @@ Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 
 Plug 'flazz/vim-colorschemes'
+
+Plug 'terryma/vim-multiple-cursors'
 
 Plug 'editorconfig/editorconfig-vim'
 
