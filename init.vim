@@ -32,6 +32,11 @@ set title                      " Change terminal title
 "set undoreload=10000           " Number of lines to save for undo
 set backspace=indent,eol,start
 
+let g:python3_host_prog  = '/usr/bin/python3'
+
+let g:ale_fixers = {
+\   'haskell': ['hlint'],
+\}
 "==============================================================================
 " Plugin list
 "==============================================================================
@@ -43,7 +48,8 @@ Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'leafgarland/typescript-vim'
-"Plug 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar'
+Plug 'w0rp/ale'
 
 Plug 'Lokaltog/vim-powerline'
 
