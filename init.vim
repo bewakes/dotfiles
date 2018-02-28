@@ -32,22 +32,29 @@ set title                      " Change terminal title
 "set undoreload=10000           " Number of lines to save for undo
 set backspace=indent,eol,start
 
-let g:python3_host_prog  = '/usr/bin/python3'
+"let g:python3_host_prog  = '/usr/bin/python3'
 
-let g:ale_fixers = {
-\   'haskell': ['hlint'],
-\}
+" Move to next/previous errors
+nmap <silent> <leader>k <Plug>(ale_previous_wrap)
+nmap <silent> <leader>j <Plug>(ale_next_wrap)
+
+
+
+
 "==============================================================================
 " Plugin list
 "==============================================================================
 call plug#begin()
 
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 
 Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'leafgarland/typescript-vim'
+Plug 'isRuslan/vim-es6'
+
 Plug 'majutsushi/tagbar'
 Plug 'w0rp/ale'
 
@@ -56,11 +63,9 @@ Plug 'Lokaltog/vim-powerline'
 Plug 'tpope/vim-fugitive'
 "Plug 'airblade/vim-gitgutter'
 "Plug 'int3/vim-extradite'
-Plug 'neomake/neomake'
+"Plug 'neomake/neomake'
 Plug 'Shougo/deoplete.nvim'
 "Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
-Plug 'junegunn/fzf.vim'
 Plug 'mileszs/ack.vim'
 
 Plug 'othree/html5.vim'
@@ -113,6 +118,31 @@ Plug 'diepm/vim-rest-console'
 "Plug 'vim-airline/vim-airline-themes'
 call plug#end()
 
+let g:ctrlp_custom_ignore = 'node_modules\|.git\'
+
+" js
+let g:ale_linters = {
+\   'javascript': ['eslint'],
+\}
+"let g:jsx_ext_required = 0
+
+let g:ale_javascript_eslint_executable = 'eslint'
+
+" Change error symbols
+let g:ale_sign_error = '=>'
+let g:ale_sign_warning = '->'
+
+" Check on file open
+let g:ale_lint_on_enter = 1
+
+" No check on file save
+let g:ale_lint_on_save = 0
+
+" Check on text change
+let g:ale_lint_on_text_changed = 1
+let g:ale_lint_delay = 300 " ms
+
+
 "==============================================================================
 " Colorscheme
 "==============================================================================
@@ -163,6 +193,12 @@ nmap ;t :vsplit term://bash<CR>i
 " C-tags shortcuts
 nmap ;g <C-]>
 nmap ;b <C-t>
+
+" for resize
+nmap <leader>vi :vertical resize +7<CR>
+nmap <leader>vd :vertical resize -7<CR>
+nmap <leader>hi :resize +3<CR>
+nmap <leader>hd :resize -3<CR>
 
 " for terminal mode
 tnoremap <C-n> <C-\><C-n>

@@ -1,28 +1,32 @@
-Config { font = "xft:Bitstream Vera Sans Mono:bold:size=8:antialias=true"
+Config { font = "xft:Noto Sans Mono:size=9:bold:antialias=true"
        , bgColor = "#222222"
        , fgColor = "grey"
        , position = BottomW L 100
-       , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
-                    , Run Memory ["-t","Mem: <usedratio>%"] 10
-                    , Run Swap [] 10
-                    , Run Date "<fc=#338899>%a %b %d</fc> <fc=cyan>%H:%M:%S</fc>" "date" 10
+       , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 20
+                    , Run Memory ["-t","Mem: <usedratio>%"] 20
+                    , Run Swap [] 20
+                    , Run Date "<fc=#337799>%a %b %d</fc> <fc=cyan>%H:%M:%S</fc>" "date" 20
                     , Run StdinReader
-                    , Run Battery ["-t", "Batt: <acstatus>", "-L", "15",
+                    , Run Battery ["-t", "Battery: <acstatus>", "-L", "15",
                         "-H", "70", "--low","red", "--normal", "orange",
                         "--high", "green", "--" -- battery specific options
                                        -- discharging status
-                                       , "-o"	, "<left>%(<timeleft>)"
+                                       , "-o"	, "<left>% (<timeleft>)"
                                        -- AC "on" status
-                                       , "-O"	, "<fc=#dAA520>Charging</fc>"
+                                       , "-O"	, "<fc=#dAA520>Charging</fc>(<left>%)"
                                        -- charged status
                                        , "-i"	, "<fc=#006000>Charged</fc>"] 10
                     , Run Kbd [ ("us(dvorak)" , "<fc=#00008B>DV</fc>")
-                        , ("us"         , "<fc=#ee0000>US</fc>")
+                        , ("us"         , "<fc=#ff0000>US</fc>")
                       ]
-                    , Run GetIP "e" "ethIp" 20
-                    , Run GetIP "w" "wanIp" 20
-                    ]
+                    , Run GetIP "w" "wanip" 10
+                    , Run GetIP "e" "lanip" 10
+                    , Run DiskU [("/", "<used>"),  ("/mnt/", "<used>")]
+                        ["-L", "20", "-H", "50", "-m", "1", "-p", "3",
+                        "--normal", "orange", "--high", "green",
+                        "--low", "red"] 20
+                        ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{WAN: <fc=green>%wanIp%</fc>|LAN: <fc=green>%ethIp%</fc>|%battery%|%cpu%|%memory%|%swap%|%date% [<fc=#773366>%kbd%</fc>] "
-       }
+       , template = "%StdinReader% }{%disku%|LAN:<fc=green>%lanip%</fc>|WAN:<fc=green>%wanip%</fc>|%battery%|%cpu%|%memory%|%swap%|%date% [<fc=#773366>%kbd%</fc>]"
+}

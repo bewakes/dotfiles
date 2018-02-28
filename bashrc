@@ -2,8 +2,6 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
-export PATH=$PATH:/home/janaki/.local/bin:/opt/ghc/bin:/opt/apache-activemq-5.14.5/bin
-
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -62,7 +60,6 @@ else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
 
-
 unset color_prompt force_color_prompt
 
 # If this is an xterm set the title to user@host:dir
@@ -117,39 +114,36 @@ if ! shopt -oq posix; then
   fi
 fi
 
+export PATH="$PATH:$HOME/practices/shell/bin/"
+export DR2_LOCATION="$HOME/dr2_files/"
 
-### Bro
-export WORKSTATION=/home/janaki/projects
-export BRO_STATION=/home/janaki/.bro
-source /home/janaki/.bro/activate
+export JAVA_HOME="/usr/lib/jvm/java-8-openjdk/jre"
+export CATALINA_HOME="/usr/share/tomcat8"
 
-export AWS_ACCESS_KEY_ID="12121"
-export AWS_SECRET_ACCESS_KEY="31311"
+export SCALA_HOME=/usr/local/src/scala/scala-2.11.7
+export PATH=$SCALA_HOME/bin:$PATH
+export PATH=$PATH:/opt/android-studio/bin/
+export PATH=$PATH:~/sdk/build-tools/25.0.2/:~/sdk/platforms/:~/sdk/platform-tools/:~/sdk/tools/
+export PATH=$PATH:/home/bibek/.yarn/bin/
 
-export NVIM_HOME=/home/janaki/.vim/bundle/nvim
+# wget <paste>
+alias getauto="wget \`xclip -o\`"
 
-export NVM_DIR="/home/janaki/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+export ECLIPSE_PATH="/home/bibek/eclipse/eclipse"
 
-alias "hyperterm"="~/hyper/dist/linux-unpacked/hyper &"
-alias "untrap"="trap '' DEBUG"
-alias "startcompton"="compton --config ~/.compton.conf -b"
+alias download-links="python3 /home/bibek/practices/handy-scripts/download-links.py"
 
-LAST_COMMAND=''
 record_command() {
     # make dir .logs/commands/
     logdir=$HOME"/.logs/commands/"
     filename=`date +"%Y-%B-%d"`".log"
     mkdir -p $logdir
-    
     # get time
     tm=`date +"%H:%M:%S"`
-
     # get the command
     tmp=`history 1`
     ttmp=`echo $tmp | sed 's/[0-9]* //'`
-    LAST_COMMAND=$ttmp
-    if [[ $ttmp == *"shutdown"* ]] 
+    if [[ $ttmp == *"shutdown"* ]]
     then
         return
     fi
@@ -157,35 +151,28 @@ record_command() {
     echo $tm $ttmp >> $logdir$filename
 }
 
-request_ip() {
-    sudo ifconfig enp3s0 $1 netmask 255.255.0.0
-}
-
 export PROMPT_COMMAND='record_command'
 
+alias mysql="mysql --auto-rehash"
+
+alias checkmic="ffmpeg -f alsa -i hw:1 -t 10 output.wav"
+
+#[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 ### Bro
-export BRO_STATION=/home/janaki/.bro
-export WORKSTATION=/home/janaki/projects
-source /home/janaki/.bro/activate
+export BRO_STATION=/home/bibek/.bro
+export WORKSTATION=/home/bibek/projects
+source /home/bibek/.bro/activate
 
-export API_KEY='AIzaSyDXvdF3vaZHudSuMqVeySKG78KANKsgUDU'
-export ASSISTANT_DIR=/home/janaki/dotdot/assistant/
-alias assistant='bash "$ASSISTANT_DIR"assistant.sh'
-export PATH="$PATH:/opt/mssql-tools/bin"
+export WORKLOG_DIR=/home/bibek/projects/worklog
 
-#alias up="eval `history | tail -n 1 | cut -d' ' -f 3-`"
-up() {
-    if [[ $LAST_COMMAND == "up" ]]; then
-        cmd=`history 2 | head -n 1`
-        cmd=`echo $cmd | sed 's/[0-9]* //'`
-        LAST_COMMAND=$cmd
-    fi
-    $LAST_COMMAND
-}
+## api key for youtube
+export API_KEY="AIzaSyDXvdF3vaZHudSuMqVeySKG78KANKsgUDU"
+export ASSISTANT_DIR=/home/bibek/projects/assistant/
+alias loori='bash "$ASSISTANT_DIR"assistant.sh'
+export PATH=$HOME/.local/bin:$PATH
+
+# alias for onnecting to taskfore
+alias connecttaskfore="ssh -i ~/Downloads/taskfore_key_pair.pem ec2-user@taskfore.com"
+alias deeplconnect="ssh -i ~/Downloads/captainolimar.pem ubuntu@34.192.174.13"
 alias pingle='ping google.com'
-SMS_IDENTITY=12345
-
-search() {
-    echo "$1" ./ -r --include=*.$2 --exclude-dir=.env
-    grep "$1" ./ -r --include=*.$2 --exclude-dir=.env
-}
+alias togglescreen='sh /home/bibek/.screenlayout/toggle.sh'

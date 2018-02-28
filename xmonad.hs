@@ -7,6 +7,9 @@ import System.IO
 import XMonad.Prompt
 import XMonad.Prompt.Shell
 
+-- gaps
+import XMonad.Layout.Gaps
+
 import qualified XMonad.StackSet as W
 
 -- scratchpad
@@ -15,21 +18,25 @@ import XMonad.Util.NamedScratchpad
 
 myManageHook = composeAll
     [ className =? "Gimp"      --> doFloat
-	, className =? "Vncviewer" --> doFloat
-	]
+    , className =? "Vncviewer" --> doFloat
+    ]
+
+{-myLayoutHook = gaps [(U,10), (R,10), (D, 10), (L, 10)] $ Tall 1 (3/100) (1/2) ||| Full-}
 
 
 main = do
-    xmproc <- spawnPipe "/usr/local/bin/xmobar /home/janaki/.xmobarrc"
-    xmproc1 <- spawnPipe "/usr/local/bin/xmobar /home/janaki/.xmobaruprc"
+    xmproc <- spawnPipe "/usr/local/bin/xmobar /home/bibek/.xmobarrc"
+    xmproc1 <- spawnPipe "/usr/local/bin/xmobar /home/bibek/.xmobaruprc"
 
     xmonad $ defaultConfig
         { manageHook = manageDocks <+> myManageHook -- make sure to include myManageHook definition from above
             <+> (scratchpadManageHook $ W.RationalRect l t w h)
                         <+> manageHook defaultConfig
         , layoutHook = avoidStruts  $  layoutHook defaultConfig
+        {-, layoutHook = avoidStruts  $ myLayoutHook-}
         , handleEventHook = handleEventHook defaultConfig <+> docksEventHook
         , terminal = "gnome-terminal"
+        , focusedBorderColor = "#2244ff"
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = hPutStrLn xmproc
                         , ppTitle = xmobarColor "green" "" . shorten 50
@@ -43,12 +50,14 @@ main = do
         , ((mod4Mask, xK_r), spawn "xmonad --restart")
         , ((mod4Mask, xK_d), spawn "dmenu_run")
         , ((mod4Mask, xK_b), spawn "firefox")
+        , ((mod4Mask, xK_l), spawn "xtrlock")
+        , ((mod4Mask, xK_c), spawn "changebg")
         , ((mod4Mask, xK_h), scratchPad)
         , ((mod4Mask, xK_x), shellPrompt def)
         , ((controlMask, xK_Print), spawn "sleep 0.2; scrot -s")
         , ((0, xK_Print), spawn "scrot")
         ]
-        where scratchPad = scratchpadSpawnActionCustom "xterm -name scratchpad -e 'bash /home/janaki/dotdot/assistant/assistant.sh; bash'"
+        where scratchPad = scratchpadSpawnActionCustom "xterm -name scratchpad"
               w = 0.4
               h = 0.35
               l = 1-w

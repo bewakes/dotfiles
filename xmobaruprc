@@ -1,5 +1,5 @@
-Config { font = "xft:Bitstream Vera Sans Mono:size=9:bold:antialias=true"
-       , bgColor = "#111111"
+Config { font = "xft:Noto Sans Mono:size=9:bold:antialias=true"
+       , bgColor = "#222222"
        , fgColor = "grey"
        , position = TopW L 100
        , commands = [
