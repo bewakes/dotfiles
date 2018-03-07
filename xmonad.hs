@@ -6,6 +6,7 @@ import XMonad.Util.EZConfig(additionalKeys)
 import System.IO
 import XMonad.Prompt
 import XMonad.Prompt.Shell
+import XMonad.Layout.NoBorders
 
 -- gaps
 import XMonad.Layout.Gaps
@@ -23,20 +24,23 @@ myManageHook = composeAll
 
 {-myLayoutHook = gaps [(U,10), (R,10), (D, 10), (L, 10)] $ Tall 1 (3/100) (1/2) ||| Full-}
 
+myTerminal = "termite"
+
 
 main = do
-    xmproc <- spawnPipe "/usr/local/bin/xmobar /home/bibek/.xmobarrc"
-    xmproc1 <- spawnPipe "/usr/local/bin/xmobar /home/bibek/.xmobaruprc"
+    xmproc <- spawnPipe "/usr/local/bin/xmobar /home/bibek/.xmobarrc" 
+    --xmproc1 <- spawnPipe "/usr/local/bin/xmobar /home/bibek/.xmobaruprc"
 
     xmonad $ defaultConfig
         { manageHook = manageDocks <+> myManageHook -- make sure to include myManageHook definition from above
             <+> (scratchpadManageHook $ W.RationalRect l t w h)
                         <+> manageHook defaultConfig
-        , layoutHook = avoidStruts  $  layoutHook defaultConfig
+        , layoutHook = avoidStruts  $  smartBorders $ layoutHook defaultConfig
         {-, layoutHook = avoidStruts  $ myLayoutHook-}
         , handleEventHook = handleEventHook defaultConfig <+> docksEventHook
-        , terminal = "gnome-terminal"
-        , focusedBorderColor = "#2244ff"
+        , terminal = myTerminal
+        , focusedBorderColor = "#FF4500"
+        , normalBorderColor = "#777777"
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = hPutStrLn xmproc
                         , ppTitle = xmobarColor "green" "" . shorten 50
@@ -45,7 +49,7 @@ main = do
 
         } `additionalKeys`
         [ ((mod4Mask .|. shiftMask, xK_z), spawn "xscreensaver-command -lock; xset dpms force off")
-        , ((mod4Mask, xK_Return), spawn "gnome-terminal")
+        , ((mod4Mask, xK_Return), spawn myTerminal)
         , ((mod4Mask, xK_q), kill)
         , ((mod4Mask, xK_r), spawn "xmonad --restart")
         , ((mod4Mask, xK_d), spawn "dmenu_run")
