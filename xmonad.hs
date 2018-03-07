@@ -43,7 +43,7 @@ main = do
         , normalBorderColor = "#777777"
         , logHook = dynamicLogWithPP xmobarPP
                         { ppOutput = hPutStrLn xmproc
-                        , ppTitle = xmobarColor "green" "" . shorten 50
+                        , ppTitle = xmobarColor "skyblue" "" . shorten 50
                         }
         , modMask = mod4Mask
 
