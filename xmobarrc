@@ -4,7 +4,6 @@ Config { font = "xft:Noto Sans Mono:size=10:antialias=true"
        , position = BottomW L 100
        , commands = [ Run Cpu ["-L","3","-H","50","--normal","skyblue","--high","red"] 20
                     , Run Memory ["-t","Mem: <usedratio>%"] 20
-                    , Run Swap [] 20
                     , Run Date "<fc=skyblue>%a %b %d</fc> <fc=orange>%H:%M:%S</fc>" "date" 20
                     , Run StdinReader
                     , Run Battery ["-t", "Battery: <acstatus>", "-L", "15",
@@ -15,16 +14,23 @@ Config { font = "xft:Noto Sans Mono:size=10:antialias=true"
                                        -- AC "on" status
                                        , "-O"	, "<fc=#dAA520>Charging</fc>(<left>%)"
                                        -- charged status
-                                       , "-i"	, "<fc=#006000>Charged</fc>"] 10
+                                       , "-i"	, "<fc=#006000>Charged</fc>"] 20
                     , Run Kbd [ ("us(dvorak)" , "<fc=maroon>DV</fc>")
                         , ("us"         , "<fc=skyblue>US</fc>")
                       ]
-                    , Run DiskU [("/", "<used>"),  ("/mnt/", "<used>")]
+                    , Run GetIP "w" "wanip" 20
+                    , Run GetIP "e" "lanip" 20
+                    , Run DiskU [("/", "<free>"),  ("/mnt/", "<free>")]
                         ["-L", "20", "-H", "50", "-m", "1", "-p", "3",
                         "--normal", "orange", "--high", "skyblue",
-                        "--low", "red"] 20
-                        ]
+                        "--low", "#ff5800"] 20
+                    , Run CoreTemp ["-t", "Temp:<core0>|<core1>|<core2>|<core3>C",
+                        "-L", "40", "-H", "60",
+                        "-l", "lightblue", "-n", "gray90", "-h", "red"] 50
+
+
+		]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{%disku%|LAN:<fc=skyblue>%lanip%</fc>|WAN:<fc=skyblue>%wanip%</fc>|%battery%|%cpu%|%memory%|%swap%|%date% <%kbd%>"
+       , template = "%StdinReader% }{%disku%|%coretemp%|LAN:<fc=skyblue>%lanip%</fc>|WAN:<fc=skyblue>%wanip%</fc>|%battery%|%cpu%|%memory%|%date% <%kbd%>"
 }

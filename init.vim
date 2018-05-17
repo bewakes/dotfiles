@@ -12,7 +12,7 @@ set foldmethod=indent          " Fold based on indent level
 set hidden                     " Enables hidden buffer
 "set ignorecase                 " Case insensitive search
 set lazyredraw                 " Redraw only when we need to
-set list                       " Show invisible characters
+"set list                       " Show invisible characters
 set noswapfile                 " Disable swap file
 set nowrap                     " Disable wrapping
 set number                     " Shows line number
@@ -22,6 +22,7 @@ set shiftwidth=4               " Number of space insert/remove shifting line
 "set shortmess=I                " Hide intro message
 "set smartcase                  " Performs case sensitive search if contains uppercase letters
 "set smartindent                " Smart indentation
+set autoindent
 set softtabstop=4              " Number of spaces in tab when editing
 set splitright                 " New windows goes right
 set tabstop=4                  " Number of visual spaces per TAB
@@ -57,8 +58,6 @@ Plug 'isRuslan/vim-es6'
 
 Plug 'majutsushi/tagbar'
 Plug 'w0rp/ale'
-
-Plug 'Lokaltog/vim-powerline'
 
 Plug 'tpope/vim-fugitive'
 "Plug 'airblade/vim-gitgutter'
@@ -96,7 +95,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'christoomey/vim-tmux-navigator'
 
 Plug 'editorconfig/editorconfig-vim'
-Plug 'kien/ctrlp.vim'
+"Plug 'kien/ctrlp.vim'
 
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
@@ -114,6 +113,13 @@ Plug 'rafi/awesome-vim-colorschemes'
 
 Plug 'diepm/vim-rest-console'
 
+" LSP(language servers)
+Plug 'prabirshrestha/async.vim'
+Plug 'prabirshrestha/vim-lsp'
+Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'prabirshrestha/asyncomplete-lsp.vim'
+Plug 'prabirshrestha/asyncomplete-file.vim'
+
 "Plug 'vim-airline/vim-airline'
 "Plug 'vim-airline/vim-airline-themes'
 call plug#end()
@@ -123,6 +129,8 @@ let g:ctrlp_custom_ignore = 'node_modules\|.git\'
 " js
 let g:ale_linters = {
 \   'javascript': ['eslint'],
+\   'python': ['flake8'],
+\   'scss': ['scsslint'],
 \}
 "let g:jsx_ext_required = 0
 
@@ -148,11 +156,10 @@ let g:ale_lint_delay = 300 " ms
 "==============================================================================
 
 set background=dark
+colorscheme PaperColor
 
-let g:gruvbox_invert_selection=0
-let g:gruvbox_contrast_dark='soft'
-
-colorscheme afterglow
+"let g:gruvbox_invert_selection=0
+"let g:gruvbox_contrast_dark='soft'
 
 function! ToggleBackground()
     if &background=="dark"
@@ -186,19 +193,32 @@ nmap ;s :source ~/.config/nvim/init.vim<CR>
 nmap ;q :q<CR>
 nmap ;n :NERDTreeToggle<CR>
 nmap ;l :%foldc<CR>
+" buffers
+nmap <C-b> :Buffers<CR>
+nmap <leader>bt :tab sb 
+nmap <leader>bv :vert sb 
+nmap <leader>bh :sb 
+nmap <leader>bb :b 
+
+" nerd tree find
+nmap <leader> nf :NERDTreeFind
 
 " Spawn terminal
 nmap ;t :vsplit term://bash<CR>i
 
+
 " C-tags shortcuts
-nmap ;g <C-]>
-nmap ;b <C-t>
+nmap ;d <C-]>
+nmap <BS> <C-t>
 
 " for resize
 nmap <leader>vi :vertical resize +7<CR>
 nmap <leader>vd :vertical resize -7<CR>
 nmap <leader>hi :resize +3<CR>
 nmap <leader>hd :resize -3<CR>
+
+"fzf
+nmap <C-p> :Files<CR>
 
 " for terminal mode
 tnoremap <C-n> <C-\><C-n>
@@ -218,6 +238,9 @@ autocmd VimEnter * wincmd w
 let g:airline_powerline_fonts = 1
 let g:airline_theme='jellybeans'
 let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#left_sep = ' '
+let g:airline#extensions#tabline#left_alt_sep = '|'
+let g:airline#extensions#tabline#formatter = 'default'
 let g:Powerline_symbols = 'fancy'
 if !exists('g:airline_symbols')
   let g:airline_symbols = {}
@@ -226,6 +249,7 @@ let g:airline_symbols.space = "\ua0"
 "
 function! Run()
     let fullname = @%
+    let path = expand('%:p:h')
     let splitted = split(fullname, "/")
     let filename = splitted[len(splitted)-1]
     let name_ext = split(filename, "\\.")
@@ -234,12 +258,56 @@ function! Run()
 
     if ext == "py"
         exec "!python" fullname
+    elseif ext == "sh"
+        exec "!sh" fullname
     elseif ext == "hs"
-        silent exec "!ghc" filename "-o" name
-        exec "!./".name
-        silent exec "!rm *.o *.hi"
+        silent exec "!ghc -dynamic " fullname "-o" path."/".name
+        exec "!".path."/".name
+        silent exec "!rm ".path."/*.o ".path."/*.hi"
+    elseif ext == "c"
+        silent exec "!gcc " fullname "-o" path."/".name
+        exec "!".path."/".name
     endif
-    "!python %
 endfunction
 
 nmap ;r :call Run()<cr>
+
+
+" LSP
+if executable('typescript-language-server')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'typescript-language-server',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
+        \ 'whitelist': ['typescript'],
+        \ })
+endif
+if executable('pyls')
+    " pip install python-language-server
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'pyls',
+        \ 'cmd': {server_info->['pyls']},
+        \ 'whitelist': ['python'],
+        \ })
+endif
+
+let g:lsp_async_completion = 1
+autocmd FileType typescript setlocal omnifunc=lsp#complete
+
+let g:asyncomplete_auto_popup = 1
+let g:asyncomplete_remove_duplicates = 1
+
+au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
+    \ 'name': 'file',
+    \ 'whitelist': ['*'],
+    \ 'priority': 10,
+    \ 'completor': function('asyncomplete#sources#file#completor')
+    \ }))
+
+" RG
+command! -bang -nargs=* Rg
+ \ call fzf#vim#grep(
+ \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
+ \   <bang>0 ? fzf#vim#with_preview('up:60%')
+ \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+ \   <bang>0)

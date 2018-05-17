@@ -1,9 +1,11 @@
-Config { font = "xft:Noto Sans Mono:size=9:bold:antialias=true"
-       , bgColor = "#222222"
-       , fgColor = "grey"
+Config { font = "xft:Noto Sans Mono:size=9:antialias=true"
+       , bgColor = "#111111"
+       , fgColor = "skyblue"
        , position = TopW L 100
+       , border = BottomB
+       , borderColor = "#646464"
        , commands = [
-            Run TIL "" "til" 6000
+            Run TIL "" "til" 2000
                     ]
        , sepChar = "%"
        , alignSep = "}{"
