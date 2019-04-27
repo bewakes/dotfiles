@@ -8,25 +8,35 @@
 --
 
 import XMonad
-import Data.Monoid
+import qualified XMonad.StackSet as W 
+import qualified Data.Map as M
+import XMonad.Util.EZConfig(additionalKeys)
 import System.Exit
+import Graphics.X11.Xlib
 import System.IO
 
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.DynamicLog
-import XMonad.Util.Cursor
-import XMonad.Util.Run(spawnPipe)
-import XMonad.Layout.NoBorders
 
-import XMonad.Layout.Gaps
-
--- scratchpad
+-- utils
 import XMonad.Util.Scratchpad
 import XMonad.Util.NamedScratchpad
+import XMonad.Util.Run(spawnPipe)
+import XMonad.Prompt.Shell
+import XMonad.Prompt
 
-import qualified XMonad.StackSet as W
-import qualified Data.Map        as M
+
+-- hooks
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.UrgencyHook
+import XMonad.Hooks.ManageHelpers
+
+-- layouts
+import XMonad.Layout.NoBorders
+import XMonad.Layout.ResizableTile
+import XMonad.Layout.Reflect
+import XMonad.Layout.Tabbed
+import XMonad.Layout.Grid
+
 
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
@@ -149,10 +159,14 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_k), windows W.swapUp    )
 
     -- Shrink the master area
-    , ((modm, xK_h), sendMessage Shrink)
+    --, ((modm, xK_h), sendMessage Shrink)
 
     -- Expand the master area
-    , ((modm, xK_l), sendMessage Expand)
+    --, ((modm, xK_l), sendMessage Expand)
+    , ((modm, xK_h ), sendMessage Shrink)
+    , ((modm, xK_l ), sendMessage Expand)
+    , ((modm .|. shiftMask, xK_h ), sendMessage MirrorShrink)
+    , ((modm .|. shiftMask, xK_l ), sendMessage MirrorExpand)
 
     -- Push window back into tiling
     , ((modm, xK_t), withFocused $ windows . W.sink)
@@ -226,21 +240,34 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myOtherLayout = avoidStruts $ smartBorders $ layoutHook defaultConfig
 
-myLayout = tiled ||| Mirror tiled ||| Full
-  where
-     -- default tiling algorithm partitions the screen into two panes
-     tiled   = Tall nmaster delta ratio
 
-     -- The default number of windows in the master pane
-     nmaster = 1
+--- My Theme For Tabbed layout
+myTheme = defaultTheme { decoHeight = 16
+                        , activeColor = "#a6c292"
+                        , activeBorderColor = "#a6c292"
+                        , activeTextColor = "#000000"
+                        , inactiveBorderColor = "#000000"
+                        }
 
-     -- Default proportion of screen occupied by master pane
-     ratio   = 1/2
 
-     -- Percent of screen to increment by when resizing panes
-     delta   = 3/100
+--LayoutHook
+myLayoutHook = standardLayouts 
+   where
+    standardLayouts =   avoidStruts $ smartBorders $ (tiled |||  reflectTiled ||| Mirror tiled ||| Grid ||| Full) 
+
+    --Layouts
+    tiled     = smartBorders (ResizableTall 1 (2/100) (1/2) [])
+    reflectTiled = (reflectHoriz tiled)
+    tabLayout = (tabbed shrinkText myTheme)
+    full      = noBorders Full
+
+    --Web Layout
+    webL      = avoidStruts $  tabLayout  ||| tiled ||| reflectHoriz tiled |||  full 
+
+    --VirtualLayout
+    fullL = avoidStruts $ full
+
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -307,18 +334,9 @@ myEventHook = handleEventHook defaultConfig <+> docksEventHook
 -- myLogHook = return ()
 myLogHook :: Handle -> X ()
 myLogHook h = dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn h }
+
+
  
----- Looks --
----- bar
-customPP :: PP
-customPP = defaultPP { 
-      ppHidden = xmobarColor "#00FF00" ""
-    , ppCurrent = xmobarColor "#FF0000" "" . wrap "[" "]"
-    , ppUrgent = xmobarColor "#FF0000" "" . wrap "*" "*"
-    , ppLayout = xmobarColor "#FF0000" ""
-    , ppTitle = xmobarColor "#00FF00" "" . shorten 80
-    , ppSep = "<fc=#0033FF> | </fc>"
-}
 
 ------------------------------------------------------------------------
 -- Startup hook
@@ -328,7 +346,7 @@ customPP = defaultPP {
 -- per-workspace layout choices.
 --
 -- By default, do nothing.
-myStartupHook = setDefaultCursor xC_left_ptr
+myStartupHook = return ()
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
@@ -361,7 +379,7 @@ defaults xmproc = defaultConfig {
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
-        layoutHook         = myOtherLayout,
+        layoutHook         = myLayoutHook,
         manageHook         = myManageHook,
         handleEventHook    = myEventHook,
         logHook            = myLogHook xmproc,
