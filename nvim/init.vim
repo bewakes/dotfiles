@@ -4,7 +4,7 @@
 
 let mapleader=";"
 set colorcolumn=80             " Ruler for maximum characters
-set cursorline                 " Highlight current line
+"set cursorline                 " Highlight current line
 set expandtab                  " Tabs are spaces
 set foldenable                 " Enable folding
 set foldlevelstart=10          " Open most folds by default
@@ -21,7 +21,7 @@ set shiftround                 " Round indent to multiple of 'shiftwidth'
 set shiftwidth=4               " Number of space insert/remove shifting line
 "set shortmess=I                " Hide intro message
 "set smartcase                  " Performs case sensitive search if contains uppercase letters
-"set smartindent                " Smart indentation
+set smartindent                " Smart indentation
 set autoindent
 set softtabstop=4              " Number of spaces in tab when editing
 set splitright                 " New windows goes right
@@ -33,21 +33,26 @@ set title                      " Change terminal title
 "set undoreload=10000           " Number of lines to save for undo
 set backspace=indent,eol,start
 
-"let g:python3_host_prog  = '/usr/bin/python3'
+let base16colorspace=256
+set t_Co=256
+
+let g:python3_host_prog  = '/usr/bin/python3'
+let g:python_host_prog  = '/usr/bin/python'
 
 " Move to next/previous errors
 nmap <silent> <leader>k <Plug>(ale_previous_wrap)
 nmap <silent> <leader>j <Plug>(ale_next_wrap)
 
-
-
+let g:ale_completion_enabled = 1
 
 "==============================================================================
 " Plugin list
 "==============================================================================
 call plug#begin()
 
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'bewakes/vim-rest-client'
+Plug 'ryanolsonx/vim-lsp-python'
+
 Plug 'junegunn/fzf.vim'
 
 Plug 'morhetz/gruvbox'
@@ -60,68 +65,47 @@ Plug 'majutsushi/tagbar'
 Plug 'w0rp/ale'
 
 Plug 'tpope/vim-fugitive'
-"Plug 'airblade/vim-gitgutter'
-"Plug 'int3/vim-extradite'
-"Plug 'neomake/neomake'
 Plug 'Shougo/deoplete.nvim'
-"Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'mileszs/ack.vim'
 
-Plug 'othree/html5.vim'
-Plug 'othree/javascript-libraries-syntax.vim'
-Plug 'pangloss/vim-javascript'
 Plug 'Chiel92/vim-autoformat'
 Plug 'zchee/deoplete-jedi'
 
-Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-eunuch'
-Plug 'junegunn/vim-peekaboo'
-"Plug 'junegunn/vim-easy-align', { 'on': ['<Plug>(EasyAlign)', 'EasyAlign'] }
+Plug 'tpope/vim-dispatch'
+
 Plug 'justinmk/vim-dirvish'
-Plug 'justinmk/vim-sneak'
-Plug 'wellle/targets.vim'
-Plug 'kshenoy/vim-signature'
-Plug 'tmhedberg/matchit'
-"Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 
 Plug 'mhinz/vim-startify'
 Plug 'Yggdroot/indentLine'
 
-Plug 'justinmk/vim-gtfo'
-Plug 'tpope/vim-dispatch'
-Plug 'christoomey/vim-tmux-navigator'
-
 Plug 'editorconfig/editorconfig-vim'
-"Plug 'kien/ctrlp.vim'
 
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 
 Plug 'flazz/vim-colorschemes'
+Plug 'ayu-theme/ayu-vim'
 
-Plug 'terryma/vim-multiple-cursors'
+" Plug 'nvie/vim-flake8'
 
-Plug 'editorconfig/editorconfig-vim'
-
-Plug 'nvie/vim-flake8'
-
-Plug 'vim-scripts/wombat256.vim'
+" Color schemes
+Plug 'chriskempson/base16-vim'
 Plug 'rafi/awesome-vim-colorschemes'
 
-Plug 'diepm/vim-rest-console'
+" Git/mercurial/others diff icons on the side of the file lines
+Plug 'mhinz/vim-signify'
 
-" LSP(language servers)
-Plug 'prabirshrestha/async.vim'
-Plug 'prabirshrestha/vim-lsp'
-Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'prabirshrestha/asyncomplete-lsp.vim'
-Plug 'prabirshrestha/asyncomplete-file.vim'
+" Vue
+Plug 'posva/vim-vue'
 
-"Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
+" Table mode
+Plug 'dhruvasagar/vim-table-mode'
+
+" haskell vim
+Plug 'begriffs/haskell-vim-now'
+
 call plug#end()
 
 let g:ctrlp_custom_ignore = 'node_modules\|.git\'
@@ -131,6 +115,7 @@ let g:ale_linters = {
 \   'javascript': ['eslint'],
 \   'python': ['flake8'],
 \   'scss': ['scsslint'],
+\   'haskell': ['hlint'],
 \}
 "let g:jsx_ext_required = 0
 
@@ -144,7 +129,7 @@ let g:ale_sign_warning = '->'
 let g:ale_lint_on_enter = 1
 
 " No check on file save
-let g:ale_lint_on_save = 0
+let g:ale_lint_on_save = 1
 
 " Check on text change
 let g:ale_lint_on_text_changed = 1
@@ -155,11 +140,8 @@ let g:ale_lint_delay = 300 " ms
 " Colorscheme
 "==============================================================================
 
-set background=dark
+set background=light
 colorscheme PaperColor
-
-"let g:gruvbox_invert_selection=0
-"let g:gruvbox_contrast_dark='soft'
 
 function! ToggleBackground()
     if &background=="dark"
@@ -174,7 +156,6 @@ nnoremap <F5> :call ToggleBackground()<CR>
 "==============================================================================
 " Mappings
 "==============================================================================
-
 imap fk <Esc>
 imap FK <Esc>
 imap fj <C-n>
@@ -183,16 +164,25 @@ map <Tab> gt
 nmap <Tab> gt
 map <S-Tab> gT
 nmap <S-Tab> gT
-"map <S-Tab> :tabl<cr>
-"nmap <S-Tab> :tabl<cr>
+
 nmap ;w <C-w>w
 nmap ;f za
-inoremap # X#
+"inoremap # X#
 
 nmap ;s :source ~/.config/nvim/init.vim<CR>
 nmap ;q :q<CR>
 nmap ;n :NERDTreeToggle<CR>
 nmap ;l :%foldc<CR>
+
+" Moving lines and blocks
+nnoremap <A-j> :m +1<CR>
+nnoremap <A-k> :m -2<CR>
+vnoremap <A-j> :m '>+1<CR>gv=gv
+vnoremap <A-k> :m '<-2<CR>gv=gv
+
+" Copying to clipboard
+vnoremap <C-y> "+y
+
 " buffers
 nmap <C-b> :Buffers<CR>
 nmap <leader>bt :tab sb 
@@ -206,7 +196,6 @@ nmap <leader> nf :NERDTreeFind
 " Spawn terminal
 nmap ;t :vsplit term://bash<CR>i
 
-
 " C-tags shortcuts
 nmap ;d <C-]>
 nmap <BS> <C-t>
@@ -216,6 +205,9 @@ nmap <leader>vi :vertical resize +7<CR>
 nmap <leader>vd :vertical resize -7<CR>
 nmap <leader>hi :resize +3<CR>
 nmap <leader>hd :resize -3<CR>
+
+" ALE
+nmap <leader>gd : ALEGoToDefinition<CR>
 
 "fzf
 nmap <C-p> :Files<CR>
@@ -230,11 +222,6 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd VimEnter * wincmd w
 "autocmd BufWinEnter * NERDTreeMirror
  
-"Pathogen
-"execute pathogen#infect()
-
-":let g:nerdtree_tabs_open_on_console_startup = 1
-
 let g:airline_powerline_fonts = 1
 let g:airline_theme='jellybeans'
 let g:airline#extensions#tabline#enabled = 1
@@ -261,53 +248,97 @@ function! Run()
     elseif ext == "sh"
         exec "!sh" fullname
     elseif ext == "hs"
-        silent exec "!ghc -dynamic " fullname "-o" path."/".name
+        exec "!ghc -dynamic " fullname "-o" path."/".name
         exec "!".path."/".name
         silent exec "!rm ".path."/*.o ".path."/*.hi"
     elseif ext == "c"
-        silent exec "!gcc " fullname "-o" path."/".name
+        exec "!gcc " fullname "-o" path."/".name
+        echo "EXECUTING..."
         exec "!".path."/".name
+        silent exec "!rm ".path."/".name
+    elseif ext == "js"
+        exec "!node " fullname
+    elseif ext == "tex"
+        let command = "texi2pdf ".fullname." && rm ".path."/".name.".aux && "."rm ".path."/".name.".out && "." echo TEX converted to PDF "
+        exec "!".command
+    elseif ext == "rkt"
+        exec "!racket ".fullname
     endif
 endfunction
 
-nmap ;r :call Run()<cr>
-
-
-" LSP
-if executable('typescript-language-server')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'typescript-language-server',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
-        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
-        \ 'whitelist': ['typescript'],
-        \ })
-endif
-if executable('pyls')
-    " pip install python-language-server
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'pyls',
-        \ 'cmd': {server_info->['pyls']},
-        \ 'whitelist': ['python'],
-        \ })
-endif
-
-let g:lsp_async_completion = 1
-autocmd FileType typescript setlocal omnifunc=lsp#complete
+nmap <leader>r :call Run()<cr>
+nnoremap <silent> <leader>v :e $MYVIMRC<CR>
 
 let g:asyncomplete_auto_popup = 1
 let g:asyncomplete_remove_duplicates = 1
 
-au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
-    \ 'name': 'file',
-    \ 'whitelist': ['*'],
-    \ 'priority': 10,
-    \ 'completor': function('asyncomplete#sources#file#completor')
-    \ }))
+"au User asyncomplete_setup call asyncomplete#register_source(asyncomplete#sources#file#get_source_options({
+    "\ 'name': 'file',
+    "\ 'whitelist': ['*'],
+    "\ 'priority': 10,
+    "\ 'completor': function('asyncomplete#sources#file#completor')
+"    \ }))
 
-" RG
-command! -bang -nargs=* Rg
- \ call fzf#vim#grep(
- \   'rg --column --line-number --no-heading --color=always '.shellescape(<q-args>), 1,
- \   <bang>0 ? fzf#vim#with_preview('up:60%')
- \           : fzf#vim#with_preview('right:50%:hidden', '?'),
- \   <bang>0)
+fun! Rg(arg) "{{{ 
+    let s:query = a:arg
+    if empty(a:arg)
+        let s:query = expand("<cword>")
+    endif
+    call fzf#vim#grep(
+    \   'rg --column --line-number --no-heading --color=always '.shellescape(s:query), 1,
+    \   fzf#vim#with_preview('up:60%')
+    \   )
+endfunction "}}}
+
+command! -bang -nargs=* Rg call Rg('<args>')
+
+" Folding 
+augroup my_colors
+    autocmd!
+    autocmd VimEnter * highlight Folded guibg=None ctermbg=NONE cterm=italic
+    autocmd ColorScheme * highlight Folded guibg=None ctermbg=NONE cterm=italic
+augroup END
+
+" CUSTOM FOLD
+function! MyFoldText() " {{{
+    let line = getline(v:foldstart)
+
+    let nucolwidth = &foldcolumn + &number * &numberwidth
+    let windowwidth = winwidth(0) - nucolwidth - 3
+    let foldedlinecount = v:foldend - v:foldstart
+
+    " expand tabs into spaces
+    let onetab = strpart('          ', 0, &tabstop)
+    let line = substitute(line, '\t', onetab, 'g')
+
+    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
+    let fillcharcount = windowwidth - len(line) - len(foldedlinecount) - 8
+    return ' > ' . line . ' ... ' . foldedlinecount . ' lines' . repeat(' ',fillcharcount)
+endfunction " }}}
+
+"SUM THE SELECTED Numbers
+function! SumSelected() " {{{
+    let sum = 0
+    for l:line in getline(1,'$')
+        let sum = sum + str2float(line)
+    endfor
+    echo sum
+endfunction " }}}
+
+set foldtext=MyFoldText()
+
+" CTRL-A CTRL-Q to select all and build quickfix list
+function! s:build_quickfix_list(lines)
+  call setqflist(map(copy(a:lines), '{ "filename": v:val }'), 'r', { 'title': 'My search' })
+  copen
+  cc
+endfunction
+
+" Quickfix
+" FZF
+let g:fzf_action = {
+  \ 'ctrl-q': function('s:build_quickfix_list'),
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'

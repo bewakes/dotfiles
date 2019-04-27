@@ -1,8 +1,9 @@
 Config { font = "xft:Noto Sans Mono:size=10:antialias=true"
        , bgColor = "#222222"
-       , fgColor = "grey"
+       , fgColor = "gray"
        , position = BottomW L 100
        , commands = [ Run Cpu ["-L","3","-H","50","--normal","skyblue","--high","red"] 20
+                    , Run Wireless "wlp2s0" ["-t", "Wifi: <fc=skyblue><essid></fc>"] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 20
                     , Run Date "<fc=skyblue>%a %b %d</fc> <fc=orange>%H:%M:%S</fc>" "date" 20
                     , Run StdinReader
@@ -18,8 +19,8 @@ Config { font = "xft:Noto Sans Mono:size=10:antialias=true"
                     , Run Kbd [ ("us(dvorak)" , "<fc=maroon>DV</fc>")
                         , ("us"         , "<fc=skyblue>US</fc>")
                       ]
-                    , Run GetIP "w" "wanip" 20
-                    , Run GetIP "e" "lanip" 20
+--                    , Run GetIP "w" "wanip" 20
+--                    , Run GetIP "e" "lanip" 20
                     , Run DiskU [("/", "<free>"),  ("/mnt/", "<free>")]
                         ["-L", "20", "-H", "50", "-m", "1", "-p", "3",
                         "--normal", "orange", "--high", "skyblue",
@@ -32,5 +33,8 @@ Config { font = "xft:Noto Sans Mono:size=10:antialias=true"
 		]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{%disku%|%coretemp%|LAN:<fc=skyblue>%lanip%</fc>|WAN:<fc=skyblue>%wanip%</fc>|%battery%|%cpu%|%memory%|%date% <%kbd%>"
+       -- , template = "%StdinReader% }{%disku%|LAN:<fc=skyblue>%lanip%</fc>|WAN:<fc=skyblue>%wanip%</fc>|%battery%|%cpu%|%memory%|%date% "
+       , template = "%StdinReader% }{%wlp2s0wi%|%disku%|%battery%|%cpu%|%memory%|%date% "
+       , pickBroadest = True
 }
+-- vim:ft=haskell
