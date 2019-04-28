@@ -21,6 +21,7 @@ import XMonad.Util.Scratchpad
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Prompt.Shell
+import XMonad.Util.Cursor
 import XMonad.Prompt
 
 
@@ -346,7 +347,7 @@ myLogHook h = dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn h }
 -- per-workspace layout choices.
 --
 -- By default, do nothing.
-myStartupHook = return ()
+myStartupHook = setDefaultCursor xC_left_ptr
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
