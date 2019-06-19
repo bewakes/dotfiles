@@ -34,6 +34,9 @@ import XMonad.Hooks.ManageHelpers
 -- layouts
 import XMonad.Layout.NoBorders
 import XMonad.Layout.ResizableTile
+import XMonad.Layout.ToggleLayouts
+import XMonad.Layout.MultiToggle as MT
+import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.Reflect
 import XMonad.Layout.Tabbed
 import XMonad.Layout.Grid
@@ -42,7 +45,7 @@ import XMonad.Layout.Grid
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal      = "termite"
+myTerminal      = "alacritty"
 
 xmonadPath =  "~/home/bibek/.xmonad/xmonad-x86_64-linux"
 
@@ -102,8 +105,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- close focused window
     , ((modm, xK_q), kill)
 
-    -- launch firefox
-    , ((modm, xK_b), spawn "firefox")
+    -- toggle FullScreen
+    , (
+        (modm, xK_f),
+        sendMessage $ MT.Toggle FULL
+      )
 
      -- Rotate through the available layout algorithms
     , ((modm, xK_space), sendMessage NextLayout)
@@ -118,10 +124,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm, xK_c), spawn "xtrlock")
 
     -- Change the wallpaper in random
-    , ((modm, xK_w), spawn "feh --randomize --bg-fill ~/Pictures/wallpapers/unsplash/*")
+    , ((modm, xK_g), spawn "feh --randomize --bg-fill ~/Pictures/wallpapers/unsplash/*")
 
     -- Download wallpaper(custom script)
-    , ((modm .|. shiftMask, xK_w), spawn "getwallpaper.sh")
+    , ((modm .|. shiftMask, xK_g), spawn "getwallpaper.sh")
 
     -- launch assistant scratchpad
     , ((modm, xK_semicolon), assistantScratchPad)
@@ -255,7 +261,9 @@ myTheme = defaultTheme { decoHeight = 16
 --LayoutHook
 myLayoutHook = standardLayouts 
    where
-    standardLayouts =   avoidStruts $ smartBorders $ (tiled |||  reflectTiled ||| Mirror tiled ||| Grid ||| Full) 
+    standardLayouts =   avoidStruts $ smartBorders
+        $ mkToggle (NOBORDERS ?? FULL ?? EOT)
+        $ (tiled |||  reflectTiled ||| Mirror tiled ||| Grid ||| Full) 
 
     --Layouts
     tiled     = smartBorders (ResizableTall 1 (2/100) (1/2) [])

@@ -50,7 +50,7 @@ let g:ale_completion_enabled = 1
 "==============================================================================
 call plug#begin()
 
-Plug 'bewakes/vim-rest-client'
+" Plug 'bewakes/vim-rest-client'
 Plug 'ryanolsonx/vim-lsp-python'
 
 Plug 'junegunn/fzf.vim'
@@ -116,7 +116,13 @@ let g:ale_linters = {
 \   'python': ['flake8'],
 \   'scss': ['scsslint'],
 \   'haskell': ['hlint'],
+\   'c': ['clangtidy', 'cppcheck'],
+\ }
+
+let g:ale_fixers = {
+  \ 'c': ['clang-format'],
 \}
+
 "let g:jsx_ext_required = 0
 
 let g:ale_javascript_eslint_executable = 'eslint'
@@ -263,6 +269,8 @@ function! Run()
         exec "!".command
     elseif ext == "rkt"
         exec "!racket ".fullname
+    elseif ext == "r"
+        exec "!Rscript ".fullname
     endif
 endfunction
 
