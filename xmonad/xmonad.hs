@@ -263,7 +263,7 @@ myLayoutHook = standardLayouts
    where
     standardLayouts =   avoidStruts $ smartBorders
         $ mkToggle (NOBORDERS ?? FULL ?? EOT)
-        $ (tiled |||  reflectTiled ||| Mirror tiled ||| Grid ||| Full) 
+        $ (tiled |||  reflectTiled ||| Mirror tiled ||| Grid ||| Full ||| simpleTabbed) 
 
     --Layouts
     tiled     = smartBorders (ResizableTall 1 (2/100) (1/2) [])
@@ -297,7 +297,7 @@ myScratchPads = [
       NS "assistant" spawnAssistant findAssistant manageAssistant
     --, NS "scratch" spawnScratch findScratch manageScratch
     ]
-    where spawnAssistant = "termite -title assistant -e assistant"
+    where spawnAssistant = myTerminal ++ " --title assistant -e assistant"
           findAssistant = className =? "assistant"
           manageAssistant = customFloating $ W.RationalRect l t w h
             where ih = 0.6       -- height, 60% 

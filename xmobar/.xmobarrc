@@ -3,11 +3,18 @@ Config { font = "xft:Noto Sans Mono:size=10:antialias=true"
        , fgColor = "gray"
        , position = BottomW L 100
        , commands = [ Run Cpu ["-L","3","-H","50","--normal","skyblue","--high","red"] 20
+                    -- volume indicator
+                    -- , Run Alsa "default" "Master"
+                    --     [ "-f", "▮", "-b", "▯"
+                    --     , "-t", "<fc=#899299>Vol:</fc> <status><fc=#899299><volume>% <volumebar></fc>"
+                    --     , "--"
+                    --     , "-C", "#C0E550", "-c", "#E55C50"]
                     , Run Wireless "wlp2s0" ["-t", "Wifi: <fc=skyblue><essid></fc>"] 10
                     , Run Memory ["-t","Mem: <usedratio>%"] 20
                     , Run Date "<fc=skyblue>%a %b %d</fc> <fc=orange>%H:%M:%S</fc>" "date" 20
                     , Run StdinReader
                     , Run Battery ["-t", "Battery: <acstatus>", "-L", "15",
+                        "-a", "dunstify BATTERY LOW!!",
                         "-H", "70", "--low","red", "--normal", "orange",
                         "--high", "skyblue", "--" -- battery specific options
                                        -- discharging status
