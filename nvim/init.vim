@@ -28,6 +28,9 @@ set backspace=indent,eol,start
 set completeopt-=preview        " do not show preview window on omnicompletion
 set foldtext=MyFoldText()
 
+set winblend=8
+set pumblend=15
+
 filetype plugin indent on      " Auto detect file type for indentation
 
 "==============================================================================
@@ -85,7 +88,7 @@ call plug#end()
 let base16colorspace=256
 set t_Co=256
 
-set background=light
+set background=dark "background theme
 colorscheme PaperColor
 
 "==============================================================================
