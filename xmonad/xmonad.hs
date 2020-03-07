@@ -79,6 +79,9 @@ myModMask       = mod4Mask
 --
 myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
 
+normalBrowser = "firefox-developer-edition"
+workBrowser = normalBrowser ++ " -P \"bewakes-toggle\""
+
 -- Border colors for unfocused and focused windows, respectively.
 --
 myNormalBorderColor  = "#dddddd"
@@ -124,7 +127,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm, xK_c), spawn "xtrlock")
 
     -- Change the wallpaper in random
-    , ((modm, xK_g), spawn "feh --randomize --bg-fill ~/Pictures/wallpapers/unsplash/*")
+    , ((modm, xK_g), spawn "feh --randomize --bg-fill ~/Pictures/wallpapers/generative-stuffs/*")
 
     -- Download wallpaper(custom script)
     , ((modm .|. shiftMask, xK_g), spawn "getwallpaper.sh")
@@ -195,6 +198,10 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Restart xmonad
     , ((modm .|. shiftMask, xK_r), spawn $ "xmonad --recompile; xmonad --restart")
+
+    -- Open browser
+    , ((modm .|. shiftMask, xK_b), spawn workBrowser)
+    , ((modm .|. shiftMask, xK_f), spawn normalBrowser)
 
     ]
     ++
@@ -267,8 +274,8 @@ myLayoutHook = standardLayouts
 
     --Layouts
     tiled     = smartBorders (ResizableTall 1 (2/100) (1/2) [])
-    reflectTiled = (reflectHoriz tiled)
-    tabLayout = (tabbed shrinkText myTheme)
+    reflectTiled = reflectHoriz tiled
+    tabLayout = tabbed shrinkText myTheme
     full      = noBorders Full
 
     --Web Layout

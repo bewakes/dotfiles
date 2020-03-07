@@ -14,18 +14,16 @@ Config { font = "xft:Noto Sans Mono:size=10:antialias=true"
                     , Run Date "<fc=skyblue>%a %b %d</fc> <fc=orange>%H:%M:%S</fc>" "date" 20
                     , Run StdinReader
                     , Run Battery ["-t", "Battery: <acstatus>", "-L", "15",
-                        "-a", "dunstify BATTERY LOW!!",
                         "-H", "70", "--low","red", "--normal", "orange",
                         "--high", "skyblue", "--" -- battery specific options
+                                       , "-A", "20"
+                                       , "-a", "on_battery_low.sh"
                                        -- discharging status
                                        , "-o"	, "<left>% (<timeleft>)"
                                        -- AC "on" status
                                        , "-O"	, "<fc=#dAA520>Charging</fc>(<left>%)"
                                        -- charged status
                                        , "-i"	, "<fc=#006000>Charged</fc>"] 20
-                    , Run Kbd [ ("us(dvorak)" , "<fc=maroon>DV</fc>")
-                        , ("us"         , "<fc=skyblue>US</fc>")
-                      ]
 --                    , Run GetIP "w" "wanip" 20
 --                    , Run GetIP "e" "lanip" 20
                     , Run DiskU [("/", "<free>"),  ("/mnt/", "<free>")]

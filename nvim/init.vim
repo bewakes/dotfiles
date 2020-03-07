@@ -46,7 +46,6 @@ Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'majutsushi/tagbar'
 Plug 'w0rp/ale'
 
 Plug 'tpope/vim-fugitive'
@@ -57,7 +56,6 @@ Plug 'zchee/deoplete-jedi'
 Plug 'justinmk/vim-dirvish'
 
 Plug 'mhinz/vim-startify'
-Plug 'Yggdroot/indentLine'
 
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
@@ -70,15 +68,10 @@ Plug 'sheerun/vim-polyglot'
 " Git/mercurial/others diff icons on the side of the file lines
 Plug 'mhinz/vim-signify'
 
-" Table mode
-Plug 'dhruvasagar/vim-table-mode'
-
 " haskell vim
-Plug 'neovimhaskell/haskell-vim'
+Plug 'eagletmt/ghcmod-vim'
+" Plug 'neovimhaskell/haskell-vim'
 Plug 'alx741/vim-hindent' " Optional
-
-" Language server support
-Plug 'neoclide/coc.nvim', {'do': { -> coc#util#install()}}
 
 call plug#end()
 
@@ -99,7 +92,7 @@ let g:ale_linters = {
 \   'javascript': ['eslint'],
 \   'python': ['flake8'],
 \   'scss': ['scsslint'],
-\   'haskell': ['hlint'],
+\   'haskell': ['hlint', 'hdevtools', 'ghc-mod', 'stack-ghc'],
 \   'c': ['clangtidy', 'cppcheck'],
 \ }
 
@@ -225,6 +218,9 @@ endfunction
 "==================Custom Function Mappings==================================
 nnoremap <F5> :call ToggleBackground()<CR>
 
+nnoremap <Leader>ht :GhcModType<cr>
+nnoremap <Leader>htc :GhcModTypeClear<cr>
+
 " Move to next/previous errors
 nmap <silent> <leader>k <Plug>(ale_previous_wrap)
 nmap <silent> <leader>j <Plug>(ale_next_wrap)
@@ -298,6 +294,7 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 
 autocmd VimEnter * wincmd w
+autocmd FileType haskell nnoremap <buffer> <leader>? :call ale#cursor#ShowCursorDetail()<cr>
 "
 " Folding 
 augroup my_colors
@@ -322,6 +319,7 @@ let $FZF_DEFAULT_OPTS = '--bind ctrl-a:select-all'
 
 let g:airline_powerline_fonts = 1
 let g:airline_theme='jellybeans'
+let g:airline#extensions#ale#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#left_sep = ' '
 let g:airline#extensions#tabline#left_alt_sep = '|'
