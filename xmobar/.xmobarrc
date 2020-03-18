@@ -33,13 +33,14 @@ Config { font = "xft:Noto Sans Mono:size=10:antialias=true"
                     , Run CoreTemp ["-t", "Temp:<core0>|<core1>|<core2>|<core3>C",
                         "-L", "40", "-H", "60",
                         "-l", "lightblue", "-n", "gray90", "-h", "red"] 50
+                    , Run Com "volume.sh" [] "volume" 2
 
 
 		]
        , sepChar = "%"
        , alignSep = "}{"
        -- , template = "%StdinReader% }{%disku%|LAN:<fc=skyblue>%lanip%</fc>|WAN:<fc=skyblue>%wanip%</fc>|%battery%|%cpu%|%memory%|%date% "
-       , template = "%StdinReader% }{%wlp2s0wi%|%disku%|%battery%|%cpu%|%memory%|%date% "
+       , template = "%StdinReader% }{Volume:<fc=orange>%volume%</fc>|%wlp2s0wi%|%disku%|%battery%|%cpu%|%memory%|%date% "
        , pickBroadest = True
 }
 -- vim:ft=haskell
