@@ -1,17 +1,23 @@
 import System.Exit
-import qualified Data.Map as M
 import XMonad
 import XMonad.Hooks.SetWMName
+
 import XMonad.Layout.Grid
 import XMonad.Layout.MultiToggle as MT
+import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Fullscreen
+import XMonad.Layout.Reflect
+import XMonad.Layout.Tabbed
+import XMonad.Layout.ToggleLayouts
+
 import XMonad.Util.EZConfig
 import XMonad.Prompt
 import XMonad.Prompt.Input
 import XMonad.Prompt.Shell
 import XMonad.Util.Run
+import XMonad.Util.Cursor
 import XMonad.Util.NamedScratchpad
 import XMonad.Hooks.DynamicLog
 import XMonad.Actions.DynamicWorkspaces
@@ -30,25 +36,25 @@ myFont = "xft:Fira Mono For Powerline:size=16"
 
 -- xmonadPath = "~/home/bibek/.xmonad/xmonad-x86_64-linux"
 xmonadPath = "xmonad"
- 
+
 myXpConfig :: XPConfig
 myXpConfig = def {
     borderColor     = "DarkOrange"
     , bgColor       = "black"
     , fgColor       = "#F46D43" --orange
-    , bgHLight      = "#42CBF5" --blue
+    , bgHLight      = "#55ff00" -- green
     , fgHLight      = "#f8f8f8"
-    , position      = Bottom
+    , position      = Top
     , font          = myFont
     , height        = 24
     , defaultText   = []
 }
- 
+
 modM                 = mod4Mask
 myFocusedBorderColor = "skyblue"
 myNormalBorderColor  = "#cccccc"
 myBorderWidth        = 1
-myTerminal           = "alacritty"
+myTerminal           = "termite"
 myTitleColor         = "#eeeeee"
 myTitleLength        = 80
 myCurrentWSColor     = "orange"
@@ -59,11 +65,13 @@ startupWorkspace     = "1"
 normalBrowser = "firefox-developer-edition"
 workBrowser = normalBrowser ++ " -P \"bewakes-toggle\""
 
-defaultLayouts       = smartBorders(avoidStruts(
-  ResizableTall 1 (3/100) (1/2) []
-  ||| Mirror (ResizableTall 1 (3/100) (1/2) [])
-  ||| noBorders Full
-  ||| Grid))
+defaultLayouts       = smartBorders
+    $ avoidStruts
+    $ MT.mkToggle (NOBORDERS ?? FULL ?? EOT)
+    $ ResizableTall 1 (3/100) (1/2) []
+      ||| Mirror (ResizableTall 1 (3/100) (1/2) [])
+      ||| noBorders Full
+      ||| Grid
 
 myScratchPads =
   [ NS "assistant" spawnAssistant findAssistant manageAssistant ]
@@ -99,7 +107,7 @@ myKeyBindings =
     -- WINDOW RELATED BINDINGS
     , ((modM, xK_Right), sendMessage Shrink)
     -- Toggle FullScreen
-    -- , ((modM, xK_f), sendMessage $ MT.Toggle FULL)
+    , ((modM, xK_f), sendMessage $ MT.Toggle FULL)
     , ((modM, xK_Left), sendMessage Expand)
     , ((modM, xK_Down), sendMessage MirrorShrink)
     , ((modM, xK_Up), sendMessage MirrorExpand)
@@ -120,20 +128,6 @@ myKeyBindings =
     , ((modM .|. shiftMask, xK_r), spawn $ xmonadPath ++ " --recompile; " ++ xmonadPath  ++ " --restart")
     ]
 
-myManagementHooks :: [ManageHook]
-myManagementHooks = [
-  resource =? "synapse" --> doIgnore
-  , resource =? "stalonetray" --> doIgnore
-  , className =? "rdesktop" --> doFloat
-  , (className =? "Komodo IDE") --> doF (W.shift "5:Dev")
-  , (className =? "Komodo IDE" <&&> resource =? "Komodo_find2") --> doFloat
-  , (className =? "Komodo IDE" <&&> resource =? "Komodo_gotofile") --> doFloat
-  , (className =? "Komodo IDE" <&&> resource =? "Toplevel") --> doFloat
-  , (className =? "Empathy") --> doF (W.shift "7:Chat")
-  , (className =? "Pidgin") --> doF (W.shift "7:Chat")
-  , (className =? "Gimp-2.8") --> doF (W.shift "9:Pix")
-  ]
- 
 numPadKeys =
   [
       xK_KP_Home, xK_KP_Up, xK_KP_Page_Up
@@ -169,7 +163,8 @@ main = do
         , ppHiddenNoWindows= xmobarColor "#888888" "" }
   , workspaces         = myWorkspaces
   , normalBorderColor  = myNormalBorderColor
-  , focusFollowsMouse  = False
+  , focusFollowsMouse  = True
+  , clickJustFocuses   = True
   -- , terminal           = myTerminal
   , borderWidth        = myBorderWidth
   , layoutHook         = avoidStruts defaultLayouts
@@ -183,4 +178,5 @@ main = do
   -}
   , manageHook         = myManageHook
   }
+    `removeKeys` [(modM .|. shiftMask, xK_c)]
     `additionalKeys` myKeys

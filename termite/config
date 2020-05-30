@@ -39,49 +39,54 @@ scrollback_lines = 10000
 #scrollbar = off
 
 [colors]
-# If both of these are unset, cursor falls back to the foreground color,
-# and cursor_foreground falls back to the background color.
-#cursor = #dcdccc
-#cursor_foreground = #dcdccc
+# Base16 Solarized Light
+# Author: Ethan Schoonover (modified by aramisgithub)
 
-foreground = #333333
-#foreground_bold = #ffffff
-background = #F8EAD1
+foreground          = #586e75
+foreground_bold     = #073642
+cursor              = #073642
+cursor_foreground   = #fdf6e3
+background          = rgba(253, 246, 227)
 
-# 20% background transparency (requires a compositor)
-#background = rgba(63, 63, 63, 0.8)
+# 16 color space
 
-# If unset, will reverse foreground and background
-# highlight = #2f2f2f
+# Black, Gray, Silver, White
+color0  = #fdf6e3
+color8  = #839496
+color7  = #586e75
+color15 = #002b36
 
-# Colors from color0 to color254 can be set
+# Red
+color1  = #dc322f
+color9  = #dc322f
 
-# black
-color0  = #282a2e
-color8  = #373b41
-# red
-color1  = #a54242
-color9  = #cc6666
-# green
-color2  = #1f8011
-color10 = #b5bd68
-# yellow
-color3  = #de935f
-color11 = #f0c674
-# blue
-color4  = #5f819d
-color12 = #81a2be
-# magenta
-color5  = #85678f
-color13 = #b294bb
-# cyan
-color6  = #5e8d87
-color14 = #8abeb7
-# white
-color7  = #cacaca
-color15 = #c5c8c6
+# Green
+color2  = #859900
+color10 = #859900
 
+# Yellow
+color3  = #b58900
+color11 = #b58900
 
+# Blue
+color4  = #268bd2
+color12 = #268bd2
+
+# Purple
+color5  = #6c71c4
+color13 = #6c71c4
+
+# Teal
+color6  = #2aa198
+color14 = #2aa198
+
+# Extra colors
+color16 = #cb4b16
+color17 = #d33682
+color18 = #eee8d5
+color19 = #93a1a1
+color20 = #657b83
+color21 = #073642
 [hints]
 #font = Monospace 12
 #foreground = #dcdccc

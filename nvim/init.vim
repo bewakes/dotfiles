@@ -25,8 +25,8 @@ set termguicolors              " Enable 24 bit color support
 set title                      " Change terminal title
 set backspace=indent,eol,start
 
-set winblend=8
-set pumblend=15
+set winblend=5
+set pumblend=10
 
 syntax on
 
@@ -47,22 +47,37 @@ Plug 'neomake/neomake'
 Plug 'scrooloose/nerdtree'              " Directory Tree
 Plug 'airblade/vim-gitgutter'           " Git diffs
 Plug 'tpope/vim-fugitive'           " Git diffs
-Plug 'Shougo/deoplete.nvim'             " Completion
+" Plug 'Shougo/deoplete.nvim'             " Completion
 Plug 'godlygeek/tabular'                " Text filtering and alignment
+Plug 'dhruvasagar/vim-table-mode'
 Plug 'vim-airline/vim-airline'          " Status Bar
 Plug 'justinmk/vim-dirvish'             " Directory viewer
 
 " COLORSCHEMES
 Plug 'morhetz/gruvbox'
+Plug 'lifepillar/vim-solarized8'
+Plug 'NLKNguyen/papercolor-theme'
 
+" LSP Client
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neovim/nvim-lsp'
+ 
 " HASKELL
-Plug 'neovimhaskell/haskell-vim'    " For syntax highlighting and auto indentation
+" Plug 'neovimhaskell/haskell-vim'    " For syntax highlighting and auto indentation
+Plug 'raichoo/haskell-vim'
 Plug 'parsonsmatt/intero-neovim'    " For Ghci REPL
 Plug 'alx741/vim-hindent'           " Auto indentation, requires stack install hindent
 Plug 'alx741/vim-stylishask'        " Stylizing code, requires stack install stylish-haskell
 
+" Javascript/Typescript
+Plug 'maxmellon/vim-jsx-pretty'
+Plug 'pangloss/vim-javascript'
+Plug 'neoclide/vim-jsx-improve'
+Plug 'leafgarland/typescript-vim'
+Plug 'ianks/vim-tsx'
+
 " PYTHON
-Plug 'zchee/deoplete-jedi'          " Requires pip install jedi
+" Plug 'zchee/deoplete-jedi'          " Requires pip install jedi
 
 call plug#end()
 
@@ -70,8 +85,8 @@ call plug#end()
 "==============================================================================
 " Color scheme
 "==============================================================================
-colorscheme gruvbox
-set background=dark
+colorscheme solarized8
+set background=light "background theme
 
 "==============================================================================
 " General key bindings
@@ -96,6 +111,7 @@ nmap <C-p> :Files<CR>
 " buffers
 nmap <C-b> :Buffers<CR>
 
+tnoremap <Esc> <C-\><C-n>
 map <Tab> gt
 nmap <Tab> gt
 map <S-Tab> gT
@@ -107,33 +123,77 @@ nmap <silent> <leader>j <Plug>(ale_next_wrap)
 
 command! -bang -nargs=* Rg call Rg('<args>')
 
+" LSP keybindings
+nnoremap <silent> gd    <cmd>lua vim.lsp.buf.declaration()<CR>
+nnoremap <silent> <c-]> <cmd>lua vim.lsp.buf.definition()<CR>
+nnoremap <silent> K     <cmd>lua vim.lsp.buf.hover()<CR>
+nnoremap <silent> gD    <cmd>lua vim.lsp.buf.implementation()<CR>
+nnoremap <silent> 1gD   <cmd>lua vim.lsp.buf.type_definition()<CR>
+nnoremap <silent> gr    <cmd>lua vim.lsp.buf.references()<CR>
+nnoremap <silent> g0    <cmd>lua vim.lsp.buf.document_symbol()<CR>
+
 
 "==============================================================================
 " Auto commands
 "==============================================================================
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+augroup SyntaxSettings
+    autocmd!
+    autocmd BufNewFile,BufRead *.tsx set filetype=typescript.tsx
+augroup END
+
+" Close preview after auto complete done
+autocmd CompleteDone * pclose!
 
 " Call NeoMake every time file is saved
 call neomake#configure#automake('w')
 " Automatically open window listing issues instead of triggering by :lopen
 let g:neomake_open_list = 0
-let g:deoplete#enable_at_startup = 1
-let g:intero_start_immediately = 0
 let g:airline_powerline_fonts = 1
 
 let g:python3_host_prog = '/usr/bin/python3'
 
+let g:coc_global_extensions = [
+    \ 'coc-tsserver'
+    \]
+
+" Haskell specific
+" =============================================================================
 let g:stylishask_on_save = 0
 let g:hindent_on_save = 0
+let g:intero_start_immediately = 0
+let g:intero_backend = { 'command': 'stack ghci' }
+
+" Lookup the type of expression under the cursor
+au FileType haskell nmap <silent> <leader>t <Plug>InteroGenericType
+" Insert type declaration
+au FileType haskell nnoremap <silent> <leader>ni :InteroTypeInsert<CR>
+" Show info about expression or type under the cursor
+au FileType haskell nnoremap <silent> <leader>i :InteroInfo<CR>
+
+" Jump to the definition of an identifier
+au FileType haskell nnoremap <silent> <leader>ng :InteroGoToDef<CR>
+" Reboot Intero, for when dependencies are added
+au FileType haskell nnoremap <silent> <leader>nr :InteroKill<CR> :InteroOpen<CR>
+
+au FileType haskell nnoremap <silent> <leader>ps :Stylishask<CR>
+" =============================================================================
+
+
+" LSP CONFIG
+lua require'nvim_lsp'.hie.setup{}
+" lua require'nvim_lsp'.tsserver.setup{}
 
 let g:ale_linters = {
-    \ 'python': ['flake8'],
+    \ 'javascript': ['eslint'],
+    \ 'python': ['flake8', 'mypy'],
     \ 'haskell': ['hlint', 'ghc-mod'],
 \}
 
 let g:ale_fixers = {
     \ 'python': ['yapf'],
     \ 'java': ['uncrustify'],
+    \ 'javascript': ['eslint'],
 \}
 
 " FZF
@@ -164,21 +224,22 @@ function! Run()
     let name_ext = split(filename, "\\.")
     let ext = name_ext[1]
     let name = name_ext[0]
+    let fullpath = "'".path."/".name."'"
 
     if ext == "py"
         exec "!python" fullname
     elseif ext == "sh"
         exec "!sh" fullname
     elseif ext == "hs"
-        exec "!ghc -dynamic " fullname "-o" path."/".name
-        exec "!".path."/".name
-        silent exec "!rm ".path."/*.o ".path."/*.hi"
+        exec "!stack runhaskell " fullname
+        " exec "!".fullpath
+        silent exec "!rm '".path."/*.o' '".path."/*.hi'"
     elseif ext == "c"
         exec "!gcc " fullname "-o" path."/".name
         echo "EXECUTING..."
         exec "!".path."/".name
         silent exec "!rm ".path."/".name
-    elseif ext == "js"
+    elseif ext == "js" || ext == "ts" || ext == "tsx"
         exec "!node " fullname
     elseif ext == "tex"
         let command = "texi2pdf ".fullname." && rm ".path."/".name.".aux && "."rm ".path."/".name.".out && "." echo TEX converted to PDF "
@@ -203,7 +264,7 @@ fun! Rg(arg) "{{{
     \   )
 endfunction "}}}
 
-set runtimepath+=,/home/bibek/.config/nvim/plugged/secrets-vim/
+" set runtimepath+=,/home/bibek/.config/nvim/plugged/secrets-vim/
 
 set exrc
 set secure
