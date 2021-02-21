@@ -279,5 +279,7 @@ fun! Rg(arg) "{{{
     \   )
 endfunction "}}}
 
+command! Scratch lua require'tools'.makeScratch()
+
 set exrc
 set secure
