@@ -1,4 +1,4 @@
-"==============================================================================
+" ==============================================================================
 " General vim settings
 "==============================================================================
 
@@ -29,9 +29,7 @@ set winblend=5
 set pumblend=10
 
 syntax on
-
 filetype plugin indent on      " Auto detect file type for indentation
-
 
 "==============================================================================
 " Plugins
@@ -47,26 +45,26 @@ Plug 'neomake/neomake'
 Plug 'scrooloose/nerdtree'              " Directory Tree
 Plug 'airblade/vim-gitgutter'           " Git diffs
 Plug 'tpope/vim-fugitive'           " Git diffs
-" Plug 'Shougo/deoplete.nvim'             " Completion
 Plug 'godlygeek/tabular'                " Text filtering and alignment
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'vim-airline/vim-airline'          " Status Bar
 Plug 'justinmk/vim-dirvish'             " Directory viewer
 
 " COLORSCHEMES
-Plug 'morhetz/gruvbox'
+Plug 'dkasak/gruvbox'
 Plug 'lifepillar/vim-solarized8'
-Plug 'NLKNguyen/papercolor-theme'
 
 " LSP Client
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'neovim/nvim-lsp'
- 
+Plug 'neovim/nvim-lspconfig'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" Completion
+Plug 'nvim-lua/completion-nvim'
 " HASKELL
 " Plug 'neovimhaskell/haskell-vim'    " For syntax highlighting and auto indentation
 Plug 'raichoo/haskell-vim'
 Plug 'parsonsmatt/intero-neovim'    " For Ghci REPL
-Plug 'alx741/vim-hindent'           " Auto indentation, requires stack install hindent
 Plug 'alx741/vim-stylishask'        " Stylizing code, requires stack install stylish-haskell
 
 " Javascript/Typescript
@@ -81,12 +79,11 @@ Plug 'ianks/vim-tsx'
 
 call plug#end()
 
-
 "==============================================================================
 " Color scheme
 "==============================================================================
 colorscheme solarized8
-set background=light "background theme
+set background=dark "background theme
 
 "==============================================================================
 " General key bindings
@@ -151,18 +148,21 @@ call neomake#configure#automake('w')
 let g:neomake_open_list = 0
 let g:airline_powerline_fonts = 1
 
-let g:python3_host_prog = '/usr/bin/python3'
+" let g:python3_host_prog = '/usr/bin/python3'
+let g:python3_host_prog = '/home/bibek/.pyenv/versions/3.9.0b5/bin/python'
 
-let g:coc_global_extensions = [
-    \ 'coc-tsserver'
-    \]
 
 " Haskell specific
 " =============================================================================
 let g:stylishask_on_save = 0
+let g:stylishask_config_file = '~/.stylish-haskell.yaml'
 let g:hindent_on_save = 0
-let g:intero_start_immediately = 0
+let g:intero_start_immediately = 1
 let g:intero_backend = { 'command': 'stack ghci' }
+
+
+" Auto reload intero on save
+autocmd BufWrite *.hs InteroReload
 
 " Lookup the type of expression under the cursor
 au FileType haskell nmap <silent> <leader>t <Plug>InteroGenericType
@@ -177,12 +177,27 @@ au FileType haskell nnoremap <silent> <leader>ng :InteroGoToDef<CR>
 au FileType haskell nnoremap <silent> <leader>nr :InteroKill<CR> :InteroOpen<CR>
 
 au FileType haskell nnoremap <silent> <leader>ps :Stylishask<CR>
+
+" haskell-vim
+let g:haskell_enable_quantification = 1   " to enable highlighting of `forall`
+let g:haskell_enable_recursivedo = 1      " to enable highlighting of `mdo` and `rec`
+let g:haskell_enable_arrowsyntax = 1      " to enable highlighting of `proc`
+let g:haskell_enable_pattern_synonyms = 1 " to enable highlighting of `pattern`
+let g:haskell_enable_typeroles = 1        " to enable highlighting of type roles
+let g:haskell_enable_static_pointers = 1  " to enable highlighting of `static`
+let g:haskell_backpack = 1                " to enable highlighting of backpack keywords
 " =============================================================================
 
 
 " LSP CONFIG
-lua require'nvim_lsp'.hie.setup{}
-" lua require'nvim_lsp'.tsserver.setup{}
+lua require'nvim_lsp'.hls.setup{on_attach=require'completion'.on_attach}
+"lua require'nvim_lsp'.tsserver.setup{}
+lua require'nvim_lsp'.pyls.setup{on_attach=require'completion'.on_attach}
+set completeopt-=preview
+set completeopt=menuone,noinsert,noselect
+
+" use omni completion provided by lsp
+autocmd Filetype python setlocal omnifunc=v:lua.vim.lsp.omnifunc
 
 let g:ale_linters = {
     \ 'javascript': ['eslint'],
@@ -227,27 +242,27 @@ function! Run()
     let fullpath = "'".path."/".name."'"
 
     if ext == "py"
-        exec "!python" fullname
+        exec "!time python" fullname
     elseif ext == "sh"
-        exec "!sh" fullname
+        exec "!time sh" fullname
     elseif ext == "hs"
-        exec "!stack runhaskell " fullname
+        exec "!time stack runhaskell " fullname
         " exec "!".fullpath
         silent exec "!rm '".path."/*.o' '".path."/*.hi'"
     elseif ext == "c"
         exec "!gcc " fullname "-o" path."/".name
         echo "EXECUTING..."
-        exec "!".path."/".name
+        exec "!time ".path."/".name
         silent exec "!rm ".path."/".name
     elseif ext == "js" || ext == "ts" || ext == "tsx"
-        exec "!node " fullname
+        exec "!time node " fullname
     elseif ext == "tex"
-        let command = "texi2pdf ".fullname." && rm ".path."/".name.".aux && "."rm ".path."/".name.".out && "." echo TEX converted to PDF "
+        let command = "texi2pdf ".fullname." && rm ".path."/".name.".aux && "."rm ".path."/".name.".log && "."rm ".path."/".name.".fls &&"." echo TEX converted to PDF "
         exec "!".command
     elseif ext == "rkt"
-        exec "!racket ".fullname
+        exec "!time racket ".fullname
     elseif ext == "r"
-        exec "!Rscript ".fullname
+        exec "!time Rscript ".fullname
     elseif ext == "vrc"
         exec "RunVrc"
     endif
@@ -263,8 +278,6 @@ fun! Rg(arg) "{{{
     \   fzf#vim#with_preview('up:60%')
     \   )
 endfunction "}}}
-
-" set runtimepath+=,/home/bibek/.config/nvim/plugged/secrets-vim/
 
 set exrc
 set secure
