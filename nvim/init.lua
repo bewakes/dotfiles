@@ -14,11 +14,14 @@ vim.o.smartindent = true
 vim.o.shiftwidth = 4
 vim.o.splitright = true
 vim.o.tabstop = 4
+vim.o.softtabstop = 4
 vim.o.termguicolors = true
 vim.o.title = true
 vim.o.backspace = 'indent,eol,start'
 vim.o.winblend = 5
 vim.o.pumblend = 10
+
+vim.o.completeopt = 'menuone,longest,noinsert,noselect'
 
 vim.g.airline_powerline_fonts = 1
 vim.g.python3_host_prog = '/home/bibek/.pyenv/versions/3.9.0b5/bin/python'
@@ -38,7 +41,7 @@ cmd("call plug#begin()")
 
 cmd("Plug 'junegunn/fzf', { 'do': './install --bin' }")
 
--- plug("bewakes/vim-rest-client")
+plug("bewakes/vim-rest-client")
 -- plug("bewakes/secrets-vim")
 plug("w0rp/ale")
 plug("junegunn/fzf.vim")
@@ -65,7 +68,7 @@ plug("nvim-lua/completion-nvim")
 
 -- haskell
 plug("raichoo/haskell-vim")
-plug("parsonsmatt/intero-neovim")    -- For Ghci REPL
+-- plug("parsonsmatt/intero-neovim")    -- For Ghci REPL
 plug("alx741/vim-stylishask")        -- Stylizing code, requires stack install stylish-haskell
 
 -- js/ts
@@ -80,7 +83,11 @@ plug("ianks/vim-tsx")
 
 cmd("call plug#end()")
 
-
+-- vim.g.ale_linters = {
+--     javascript= {'eslint'},
+--     python= {'flake8', 'mypy'},
+--     haskell= {'hlint', 'ghc-mod'},
+-- }
 -- color scheme
 cmd("colorscheme solarized8")
 vim.o.background = 'dark'
@@ -107,7 +114,7 @@ nmap('<leader>r', ':call Run()<CR>')
 nmap('<C-w>', '<C-w>w')
 
 -- Copying to clipboard
-vapi.nvim_set_keymap('v', '<C-y>', '+y"', { noremap=true})
+vapi.nvim_set_keymap('v', '<C-y>', '"+y', { noremap=true})
 
 -- fzf
 nmap('<C-p>', ':Files<CR>')
@@ -126,8 +133,13 @@ nmap('<S-Tab>', 'gT')
 
 -- command! -bang -nargs=* Rg call Rg('<args>')
 --
--- TODO: lsp key bindings
-
+nmap('gd','<cmd>lua vim.lsp.buf.declaration()<CR>', { silent=true, noremap=true })
+nmap('<c-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', { silent=true, noremap=true })
+nmap('K', '<cmd>lua vim.lsp.buf.hover()<CR>', { silent=true, noremap=true })
+nmap('gD', '<cmd>lua vim.lsp.buf.implementation()<CR>', { silent=true, noremap=true })
+nmap('1gD', '<cmd>lua vim.lsp.buf.type_definition()<CR>', { silent=true, noremap=true })
+nmap('gr', '<cmd>lua vim.lsp.buf.references()<CR>', { silent=true, noremap=true })
+nmap('g0', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', { silent=true, noremap=true })
 -- Auto commands
 
 
@@ -137,9 +149,66 @@ local lsp = require('nvim_lsp')
 lsp.hls.setup{}
 lsp.pyls.setup{}
 
+-- Close preview after auto complete done
+cmd('autocmd CompleteDone * pclose!')
+
 
 -- HASKELL
-vim.g.intero_start_immediately = 1
+--
+require('nvim_lsp').hls.setup{on_attach=require('completion').on_attach}
 
 -- TODO: custom functions
 -- Run
+Run = function ()
+    local len = function(tbl)
+      local getN = 0
+      for n in pairs(tbl) do 
+        getN = getN + 1 
+      end
+      return getN
+    end
+    local Split = function(s, delimiter)
+         result = {};
+         for match in (s..delimiter):gmatch("(.-)"..delimiter) do
+             table.insert(result, match);
+         end
+         return result;
+    end
+
+    local SplitByDot = function(s)
+	result = {};
+	for match in s:gmatch("([^.]+)") do
+	    table.insert(result, match)
+	end
+	return result;
+    end
+
+    local eval = vim.api.nvim_eval
+    local fullname = eval('@%')
+    local path = eval('expand("%:p:h")')
+    local splitted = Split(fullname, "/") --eval('split("'..fullname..'", "/")')
+    local filename = splitted[len(splitted)]
+    local name_ext = SplitByDot(filename)
+    local ext = name_ext[2]
+    local name = name_ext[1]
+    local fullpath = "'"..path.."/"..name.."'"
+
+    if ext == "py" then
+	cmd('exec "!time python '..fullname..'"')
+    elseif ext == "sh" then
+	cmd('exec "!time sh '..fullname..'"')
+    elseif ext == "hs" then
+	cmd('exec "!time stack runhaskell '..fullname..'"')
+	-- TODO: remove *.o and *.hi
+    elseif ext == "c" then
+	cmd('exec "!gcc '..fullname..' -o '..path..'/'..name..'"')
+	cmd('exec "!time '..path..'/'..name..'"')
+    elseif ext == "js" or ext == "ts" or ext == "tsx" then
+    elseif ext == "tex" then
+    elseif ext == "rkt" then
+    elseif ext == "r" then
+    elseif ext == "vrc" then
+    end
+end
+
+cmd('nmap <leader>r :lua Run()<CR>')
