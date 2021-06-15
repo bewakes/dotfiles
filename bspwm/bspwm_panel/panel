@@ -1,0 +1,118 @@
+#! /bin/sh
+
+COLOR_GREEN="#90ee90"
+
+if xdo id -a "$PANEL_WM_NAME" > /dev/null ; then
+	printf "%s\n" "The panel is already running." >&2
+	exit 1
+fi
+
+_net() {
+    while true; do
+        ssid=$(iwgetid | cut -d: -f2 | sed 's/"//g')
+        ip=$(ifconfig | grep wlp2s0 -A 1 | grep inet | awk '{FS=" "} {print $2}')
+        echo "N$ssid ($ip)" > "$PANEL_FIFO" &
+        sleep 2s
+    done &
+}
+
+_disk_usage() {
+    while true; do
+        home_avail=$(df -h | grep /home$ | awk '{FS=" "} {print $4}')
+        root_avail=$(df -h | grep /$ | awk '{FS=" "} {print $4}')
+        echo "d~/ $home_avail  / $root_avail" > "$PANEL_FIFO" &
+        sleep 2s
+    done &
+}
+
+_cpu()
+{
+    while true; do
+        usg=$(cpu.py)
+        color=$COLOR_GREEN
+        if (( $(echo "$usg > 30" |bc -l) )); then
+            color="#ff0000"
+        elif (( $(echo "$usg > 10" |bc -l) )); then
+            color="#ff7722"
+        fi
+        echo "C%{F$color}$usg%" > "$PANEL_FIFO" &
+        sleep 2s
+    done &
+}
+
+_memory() {
+    while true; do
+        declare -a vals=($(cat /proc/meminfo | head -n 3 | grep -E [0-9]+ -o))
+        tot=${vals[0]}
+        av=${vals[2]}
+        let used="$tot - $av"
+        pc=$(echo $used*100 / $tot | bc -l)
+        fmt=$(printf "%.2f" $pc)
+
+        color=$COLOR_GREEN
+        if (( $(echo "$fmt > 70" |bc -l) )); then
+            color="#ff0000"
+        elif (( $(echo "$fmt > 30" |bc -l) )); then
+            color="#ff7722"
+        fi
+        echo "M%{F$color}$fmt%" > "$PANEL_FIFO" &
+        sleep 2s
+    done &
+}
+
+_volume()
+{
+    while true; do
+        volStatus=$(amixer get Master | tail -n 1 | cut -d '[' -f 4 | sed 's/].*//g')
+        volLevel=$(amixer get Master | tail -n 1 | cut -d '[' -f 2 | sed 's/%.*//g')
+        # is alsa muted or not muted?
+        if [ "$volStatus" == "on" ]
+        then
+                echo "V%{F$COLOR_GREEN}$volLevel%{F-}" > "$PANEL_FIFO" &
+        else
+                # If it is muted, make the font red
+                echo "V%{F#ff0000}$volLevel%{F-}" > "$PANEL_FIFO" &
+        fi
+        sleep 1s
+    done &
+}
+
+_date() {
+    while true; do
+        echo $(date +'D%A %b %d, %H:%M') > "$PANEL_FIFO" &
+        sleep 1s
+    done &
+}
+
+_battery() {
+    while true; do
+        acpi | awk 'BEGIN {FS=", ";} { print "B" $2 " (" $3 ")"}' > "$PANEL_FIFO" &
+        sleep 3s
+    done &
+}
+
+trap 'trap - TERM; kill 0' INT TERM QUIT EXIT
+
+[ -e "$PANEL_FIFO" ] && rm "$PANEL_FIFO"
+mkfifo "$PANEL_FIFO"
+
+xtitle -sf 'T%s\n' > "$PANEL_FIFO" &
+
+_battery
+_volume
+_date
+_cpu
+_memory
+_net
+_disk_usage
+
+bspc subscribe report > "$PANEL_FIFO" &
+
+. panel_colors
+
+panel_bar < "$PANEL_FIFO" | lemonbar -a 32 -u 2 -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "$PANEL_FONT" -F "$COLOR_DEFAULT_FG" -B "$COLOR_DEFAULT_BG" -b | sh &
+
+wid=$(xdo id -m -a "$PANEL_WM_NAME")
+xdo above -t "$(xdo id -N Bspwm -n root | sort | head -n 1)" "$wid"
+
+wait
