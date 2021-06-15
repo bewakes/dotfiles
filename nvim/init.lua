@@ -7,19 +7,17 @@ vim.o.foldmethod = 'indent'
 vim.o.hidden = true
 vim.o.lazyredraw = true
 vim.o.list = true -- Show invisible characters
--- vim.o.noswapfile = true
--- vim.o.nowrap = true
 vim.api.nvim_command('set number')
+vim.api.nvim_command('set nowrap')
 vim.o.smartindent = true
-vim.o.shiftwidth = 4
 vim.o.splitright = true
-vim.o.tabstop = 4
-vim.o.softtabstop = 4
 vim.o.termguicolors = true
 vim.o.title = true
 vim.o.backspace = 'indent,eol,start'
 vim.o.winblend = 5
 vim.o.pumblend = 10
+vim.o.swapfile = false
+vim.o.guifont = 'DejaVu Sans Mono:12'
 
 vim.o.completeopt = 'menuone,longest,noinsert,noselect'
 
@@ -28,6 +26,11 @@ vim.g.python3_host_prog = '/home/bibek/.pyenv/versions/3.9.0b5/bin/python'
 
 local vapi = vim.api
 local cmd = vapi.nvim_command
+
+cmd('set expandtab')
+cmd('set shiftwidth=4')
+cmd('set tabstop=4')
+cmd('set softtabstop=4')
 
 -- LEADER
 cmd('let mapleader=";"')
@@ -42,7 +45,8 @@ cmd("call plug#begin()")
 cmd("Plug 'junegunn/fzf', { 'do': './install --bin' }")
 
 plug("bewakes/vim-rest-client")
--- plug("bewakes/secrets-vim")
+-- plug("./plugged/vim-nepali-unicode/")
+plug("bewakes/secrets-vim")
 plug("w0rp/ale")
 plug("junegunn/fzf.vim")
 plug("neomake/neomake")
@@ -204,10 +208,13 @@ Run = function ()
 	cmd('exec "!gcc '..fullname..' -o '..path..'/'..name..'"')
 	cmd('exec "!time '..path..'/'..name..'"')
     elseif ext == "js" or ext == "ts" or ext == "tsx" then
+    cmd('exec "!node '..path..'/'..name..'"')
     elseif ext == "tex" then
+        cmd('exec "!texi2pdf '..fullname..'"')
     elseif ext == "rkt" then
     elseif ext == "r" then
     elseif ext == "vrc" then
+        cmd('exec "RunVrc"')
     end
 end
 

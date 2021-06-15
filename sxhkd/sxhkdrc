@@ -1,0 +1,10 @@
+# Reload functions
+super + Escape
+	"$XDG_CONFIG_HOME"/sxhkd/functions
+
+super + Enter
+    termite
+
+
+super + f
+    firefox-developer-edition
