@@ -30,6 +30,10 @@ super + {_,shift + }{1-9,0}
 super + {j, k}
     bspc node -f {next,prev}
 
+# Scratchpad
+super + {semicolon, n}
+    scratchpad.sh {assistant "assistant", notes "nvim /tmp/scratchnote"}
+
 #
 # state/flags
 #

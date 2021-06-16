@@ -13,5 +13,6 @@ bspc config borderless_monocle   true
 bspc config gapless_monocle      true
 bspc config focus_follows_pointer true
 
-# bspc rule -a Gimp desktop='^8' state=floating follow=on
-# bspc rule -a Firefox desktop='^2'
+# for scratchpad
+bspc rule -a notes sticky=on state=floating hidden=on
+bspc rule -a assistant sticky=on state=floating hidden=on
