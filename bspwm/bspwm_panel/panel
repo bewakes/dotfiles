@@ -1,11 +1,11 @@
 #! /bin/sh
 
-COLOR_GREEN="#90ee90"
-
 if xdo id -a "$PANEL_WM_NAME" > /dev/null ; then
 	printf "%s\n" "The panel is already running." >&2
 	exit 1
 fi
+
+. panel_helper.sh
 
 _net() {
     while true; do
@@ -29,12 +29,7 @@ _cpu()
 {
     while true; do
         usg=$(cpu.py)
-        color=$COLOR_GREEN
-        if (( $(echo "$usg > 30" |bc -l) )); then
-            color="#ff0000"
-        elif (( $(echo "$usg > 10" |bc -l) )); then
-            color="#ff7722"
-        fi
+        color=$(_get_level_color $usg 15 30)
         echo "C%{F$color}$usg%" > "$PANEL_FIFO" &
         sleep 2s
     done &
@@ -49,12 +44,7 @@ _memory() {
         pc=$(echo $used*100 / $tot | bc -l)
         fmt=$(printf "%.2f" $pc)
 
-        color=$COLOR_GREEN
-        if (( $(echo "$fmt > 70" |bc -l) )); then
-            color="#ff0000"
-        elif (( $(echo "$fmt > 30" |bc -l) )); then
-            color="#ff7722"
-        fi
+        color=$(_get_level_color $fmt 30 70)
         echo "M%{F$color}$fmt%" > "$PANEL_FIFO" &
         sleep 2s
     done &
@@ -86,7 +76,11 @@ _date() {
 
 _battery() {
     while true; do
-        acpi | awk 'BEGIN {FS=", ";} { print "B" $2 " (" $3 ")"}' > "$PANEL_FIFO" &
+        val=$(acpi | awk 'BEGIN {FS=", ";} { print $2 " (" $3 ")"}')
+        pct=$(echo $val | cut -d% -f1)
+
+        color=$(_get_level_color $pct 70 21)
+        echo  "B%{F$color}$val" > "$PANEL_FIFO" &
         sleep 3s
     done &
 }

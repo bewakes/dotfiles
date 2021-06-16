@@ -32,15 +32,7 @@ while read -r line ; do
 			;;
         B*)
 			# battery output
-            ln=${line#?}
-            pct=$(echo $ln | cut -d% -f1)
-            fg=$COLOR_SYS_FG
-            if (($pct < 21 )); then
-                fg="#ff2222"
-            elif (($pct < 50 )); then
-                fg="#ffa500"
-            fi
-            battery="Battery:%{F$fg}%{B$COLOR_SYS_BG} ${line#?} %{B-}%{F-}"
+            battery="Batt: %{F$COLOR_TITLE_FG}%{B$COLOR_TITLE_BG} ${line#?} %{B-}%{F-}"
 			;;
 		W*)
 			# bspwm's state
