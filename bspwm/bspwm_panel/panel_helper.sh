@@ -1,8 +1,6 @@
 #/bin/bash
 
-COLOR_GREEN="#90ee90"
-COLOR_ORANGE="#b1a57d"
-COLOR_RED="#ff0000"
+. panel_colors
 
 _get_level_color () {
     val=$1
@@ -21,7 +19,7 @@ _get_level_color () {
     if (( $(echo "$val $op $min" |bc -l) )); then
         color=$COLOR_RED
     elif (( $(echo "$val $op $mid" |bc -l) )); then
-        color=$COLOR_ORANGE
+        color=$COLOR_LIGHT_YELLOW
     fi
     echo $color
 }

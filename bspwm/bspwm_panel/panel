@@ -11,16 +11,29 @@ _net() {
     while true; do
         ssid=$(iwgetid | cut -d: -f2 | sed 's/"//g')
         ip=$(ifconfig | grep wlp2s0 -A 1 | grep inet | awk '{FS=" "} {print $2}')
-        echo "N$ssid ($ip)" > "$PANEL_FIFO" &
+        ip_disp=" ($ip)"
+        color=$COLOR_GREEN
+        if [[ -z $ip ]]; then
+            ip_disp=X.X.X
+            color=$COLOR_RED
+        fi
+
+        echo "N%{F$color}$ssid$ip_disp" > "$PANEL_FIFO" &
         sleep 2s
     done &
 }
 
 _disk_usage() {
+    g5=$(echo 1024*1024*5 | bc)
+    g10=$(echo 1024*1024*10 | bc)
     while true; do
-        home_avail=$(df -h | grep /home$ | awk '{FS=" "} {print $4}')
-        root_avail=$(df -h | grep /$ | awk '{FS=" "} {print $4}')
-        echo "d~/ $home_avail  / $root_avail" > "$PANEL_FIFO" &
+        home_avail_h=$(df -h | grep /home$ | awk '{FS=" "} {print $4}')
+        root_avail_h=$(df -h | grep /$ | awk '{FS=" "} {print $4}')
+        home=$(df | grep /home$ | awk '{FS=" "} {print $4}')
+        root=$(df | grep /$ | awk '{FS=" "} {print $4}')
+        home_color=$(_get_level_color $home $g10 $g5)
+        root_color=$(_get_level_color $root $g10 $g5)
+        echo "d%{F-}~/ %{F$home_color}$home_avail_h  %{F-}/ %{F$root_color}$root_avail_h" > "$PANEL_FIFO" &
         sleep 2s
     done &
 }
@@ -69,7 +82,7 @@ _volume()
 
 _date() {
     while true; do
-        echo $(date +'D%A %b %d, %H:%M') > "$PANEL_FIFO" &
+        echo "D%{F$COLOR_ORANGE}$(date +'%A %b %d, %I:%M %p')" > "$PANEL_FIFO" &
         sleep 1s
     done &
 }

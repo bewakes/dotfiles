@@ -28,7 +28,7 @@ while read -r line ; do
 			;;
 		T*)
 			# xtitle output
-			title="%{F$COLOR_TITLE_FG}%{B$COLOR_TITLE_BG} ${line#?} %{B-}%{F-}"
+			title="%{F$COLOR_CYAN}%{B$COLOR_TITLE_BG} ${line#?} %{B-}%{F-}"
 			;;
         B*)
 			# battery output
@@ -132,5 +132,5 @@ while read -r line ; do
 			done
 			;;
 	esac
-	printf "%s\n" "%{l}${wm} ${title}%{r}${disk} ${net} ${battery} ${cpu} ${mem} ${vol} ${date}"
+	printf "%s\n" "%{l}${wm}${title}%{r}${disk} ${net} ${battery} ${cpu} ${mem} ${vol} ${date}"
 done
