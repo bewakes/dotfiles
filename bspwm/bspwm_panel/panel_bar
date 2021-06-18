@@ -8,6 +8,9 @@ num_mon=$(bspc query -M | wc -l)
 
 while read -r line ; do
 	case $line in
+        X*)
+			scraped="Scraped:%{F$COLOR_SYS_FG}%{B$COLOR_SYS_BG} ${line#?} %{B-}%{F-}"
+			;;
         V*)
 			vol="Vol:%{F$COLOR_SYS_FG}%{B$COLOR_SYS_BG} ${line#?} %{B-}%{F-}"
 			;;
@@ -132,5 +135,5 @@ while read -r line ; do
 			done
 			;;
 	esac
-	printf "%s\n" "%{l}${wm}${title}%{r}${disk} ${net} ${battery} ${cpu} ${mem} ${vol} ${date}"
+	printf "%s\n" "%{l}${wm}${title}%{r}${scraped} ${disk} ${net} ${battery} ${cpu} ${mem} ${vol} ${date}"
 done

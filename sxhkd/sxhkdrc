@@ -1,6 +1,6 @@
 # Reload functions
 super + Escape
-	"$XDG_CONFIG_HOME"/sxhkd/functions
+	pkill -USR1 -x sxhkd; dunstify "Reloaded sxhkd"; 
 
 super + Return
     termite
@@ -28,7 +28,10 @@ super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '^{1-9,10}'
 
 super + {j, k}
-    bspc node -f {next,prev}
+    bspc node -f {next,prev}.local
+
+super + shift + {j, k}
+    bspc node -s last
 
 # Scratchpad
 super + {semicolon, n}

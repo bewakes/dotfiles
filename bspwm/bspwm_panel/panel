@@ -7,9 +7,17 @@ fi
 
 . panel_helper.sh
 
+_scraped() {
+    while true; do
+        c=$(du -sh /home/bibek/projects/scrapeet/* | grep _scraped | awk '{FS=" "} {print $1}')
+        echo "X$c" > "$PANEL_FIFO" &
+        sleep 5s
+    done &
+}
+
 _net() {
     while true; do
-        ssid=$(iwgetid | cut -d: -f2 | sed 's/"//g')
+        ssid=$(iwgetid -r)
         ip=$(ifconfig | grep wlp2s0 -A 1 | grep inet | awk '{FS=" "} {print $2}')
         ip_disp=" ($ip)"
         color=$COLOR_GREEN
@@ -112,6 +120,7 @@ _cpu
 _memory
 _net
 _disk_usage
+_scraped
 
 bspc subscribe report > "$PANEL_FIFO" &
 
