@@ -1,6 +1,8 @@
 #/bin/bash
 
-. $(pwd)/panel_colors
+BASE=~/.config/bspwm/bspwm_panel
+
+. $BASE/panel_colors
 
 _get_level_color () {
     val=$1

@@ -2,7 +2,9 @@
 #
 # Example panel for lemonbar
 
-. $(pwd)/panel_colors
+BASE=~/.config/bspwm/bspwm_panel
+
+. $BASE/panel_colors
 
 num_mon=$(bspc query -M | wc -l)
 

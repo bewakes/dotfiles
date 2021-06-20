@@ -1,11 +1,13 @@
 #! /bin/sh
 
+BASE=~/.config/bspwm/bspwm_panel
+
 if xdo id -a "$PANEL_WM_NAME" > /dev/null ; then
 	printf "%s\n" "The panel is already running." >&2
 	exit 1
 fi
 
-. $(pwd)/panel_helper.sh
+. $BASE/panel_helper.sh
 
 _scraped() {
     while true; do
@@ -49,7 +51,7 @@ _disk_usage() {
 _cpu()
 {
     while true; do
-        usg=$($(pwd)/cpu.py)
+        usg=$($BASE/cpu.py)
         color=$(_get_level_color $usg 15 30)
         echo "C%{F$color}$usg%" > "$PANEL_FIFO" &
         sleep 2s
@@ -124,9 +126,9 @@ _scraped
 
 bspc subscribe report > "$PANEL_FIFO" &
 
-. $(pwd)/panel_colors
+. $BASE/panel_colors
 
-$(pwd)/panel_bar < "$PANEL_FIFO" | lemonbar -a 32 -u 2 -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "$PANEL_FONT" -F "$COLOR_DEFAULT_FG" -B "$COLOR_DEFAULT_BG" -b | sh &
+$BASE/panel_bar < "$PANEL_FIFO" | lemonbar -a 32 -u 2 -n "$PANEL_WM_NAME" -g x$PANEL_HEIGHT -f "$PANEL_FONT" -F "$COLOR_DEFAULT_FG" -B "$COLOR_DEFAULT_BG" -b | sh &
 
 wid=$(xdo id -m -a "$PANEL_WM_NAME")
 xdo above -t "$(xdo id -N Bspwm -n root | sort | head -n 1)" "$wid"
