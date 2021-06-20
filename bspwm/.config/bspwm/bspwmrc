@@ -16,3 +16,10 @@ bspc config focus_follows_pointer true
 # for scratchpad
 bspc rule -a notes sticky=on state=floating hidden=on
 bspc rule -a assistant sticky=on state=floating hidden=on
+
+# for scraping
+bspc rule -a scrape desktop=^7 follow=on
+
+# specific window rule
+bspc rule -a firefoxdeveloperedition desktop=^1 follow=on
+bspc rule -a Eclipse desktop=^9 follow=on

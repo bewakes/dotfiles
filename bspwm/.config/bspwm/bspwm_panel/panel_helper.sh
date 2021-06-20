@@ -1,6 +1,6 @@
 #/bin/bash
 
-. panel_colors
+. $(pwd)/panel_colors
 
 _get_level_color () {
     val=$1

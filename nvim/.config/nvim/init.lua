@@ -59,7 +59,6 @@ plug("vim-airline/vim-airline")          -- Status Bar
 plug("justinmk/vim-dirvish")             -- Directory viewer
 
 -- Color Scheme
-plug("dkasak/gruvbox")
 plug("lifepillar/vim-solarized8")
 
 -- LSP client
@@ -77,10 +76,10 @@ plug("alx741/vim-stylishask")        -- Stylizing code, requires stack install s
 
 -- js/ts
 plug("maxmellon/vim-jsx-pretty")
-plug("pangloss/vim-javascript")
-plug("neoclide/vim-jsx-improve")
-plug("leafgarland/typescript-vim")
-plug("ianks/vim-tsx")
+-- plug("pangloss/vim-javascript")
+-- plug("neoclide/vim-jsx-improve")
+-- plug("leafgarland/typescript-vim")
+-- plug("ianks/vim-tsx")
 
 -- python
 -- plug("zchee/deoplete-jedi")
@@ -94,7 +93,7 @@ cmd("call plug#end()")
 -- }
 -- color scheme
 cmd("colorscheme solarized8")
-vim.o.background = 'dark'
+vim.o.background = 'light'
 
 -- KEY BINDINGS
 local nmap = function (k, a)
@@ -125,7 +124,6 @@ nmap('<C-p>', ':Files<CR>')
 -- buffers
 nmap('<C-b>', ':Buffers<CR>')
 
--- vapi.nvim_set_keymap('t', '<Esc>', 'C-\><C-n>', { noremap=true})
 map('<Tab>', 'gt')
 nmap('<Tab>', 'gt')
 map('<S-Tab>', 'gT')
@@ -144,18 +142,19 @@ nmap('gD', '<cmd>lua vim.lsp.buf.implementation()<CR>', { silent=true, noremap=t
 nmap('1gD', '<cmd>lua vim.lsp.buf.type_definition()<CR>', { silent=true, noremap=true })
 nmap('gr', '<cmd>lua vim.lsp.buf.references()<CR>', { silent=true, noremap=true })
 nmap('g0', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', { silent=true, noremap=true })
--- Auto commands
+nmap('g0', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', { silent=true, noremap=true })
+nmap('<c-j>', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', {silent=true, noremap=true})
+nmap('<c-k>', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', {silent=true, noremap=true})
 
+-- Auto commands
+-- Close preview after auto complete done
+cmd('autocmd CompleteDone * pclose!')
 
 -- LSP
 local lsp = require('nvim_lsp')
 
-lsp.hls.setup{}
-lsp.pyls.setup{}
-
--- Close preview after auto complete done
-cmd('autocmd CompleteDone * pclose!')
-
+lsp.pyls.setup{on_attach=require('completion').on_attach}
+lsp.tsserver.setup{on_attach=require('completion').on_attach}
 
 -- HASKELL
 --

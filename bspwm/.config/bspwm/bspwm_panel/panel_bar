@@ -2,7 +2,7 @@
 #
 # Example panel for lemonbar
 
-. panel_colors
+. $(pwd)/panel_colors
 
 num_mon=$(bspc query -M | wc -l)
 
@@ -21,7 +21,7 @@ while read -r line ; do
 			cpu="CPU:%{F$COLOR_SYS_FG}%{B$COLOR_SYS_BG} ${line#?} %{B-}%{F-}"
 			;;
         d*)
-			disk="%{F$COLOR_SYS_FG}%{B$COLOR_SYS_BG} ${line#?} %{B-}%{F-}"
+			disk="%{F$COLOR_SYS_FG}%{B$COLOR_SYS_BG} %{A:dunstify hi:}${line#?}%{A} %{B-}%{F-}"
 			;;
         M*)
 			mem="Mem:%{F$COLOR_SYS_FG}%{B$COLOR_SYS_BG} ${line#?} %{B-}%{F-}"

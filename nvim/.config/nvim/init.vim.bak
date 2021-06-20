@@ -1,0 +1,22 @@
+syntax on
+filetype plugin indent on      " Auto detect file type for indentation
+
+"==============================================================================
+" Plugins
+"==============================================================================
+call plug#begin()
+" COLORSCHEMES
+Plug 'dkasak/gruvbox'
+Plug 'lifepillar/vim-solarized8'
+
+" HASKELL
+" Plug 'neovimhaskell/haskell-vim'    " For syntax highlighting and auto indentation
+Plug 'raichoo/haskell-vim'
+
+call plug#end()
+
+"==============================================================================
+" Color scheme
+"==============================================================================
+" colorscheme solarized8
+"set background=dark "background theme
