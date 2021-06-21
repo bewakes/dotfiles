@@ -20,6 +20,10 @@ nmap('<leader>q', ':q<CR>')
 nmap('<leader>n', ':NERDTreeToggle<CR>')
 nmap('<C-w>', '<C-w>w')
 
+-- source
+nmap('<leader>s', ':Restart<CR>') -- requires nvim-reload and plenary
+nmap('<leader>i', ':e ~/.config/nvim/lua/<CR>')
+
 -- fzf
 nmap('<C-p>', ':Files<CR>')
 

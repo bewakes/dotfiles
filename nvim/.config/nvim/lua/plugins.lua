@@ -28,4 +28,8 @@ require 'paq-nvim' {
     -- lua
     'tjdevries/nlua.nvim';
     'tjdevries/nlua.nvim';
+
+    -- reload
+    'nvim-lua/plenary.nvim';
+    'famiu/nvim-reload';
 }
