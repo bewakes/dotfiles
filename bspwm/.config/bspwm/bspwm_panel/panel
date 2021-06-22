@@ -12,14 +12,6 @@ fi
 
 . $BASE/panel_helper.sh
 
-_scraped() {
-    while true; do
-        c=$(du -sh /home/bibek/projects/scrapeet/* | grep _scraped | awk '{FS=" "} {print $1}')
-        echo "X$c" > "$PANEL_FIFO" &
-        sleep 5s
-    done &
-}
-
 _net() {
     while true; do
         ssid=$(iwgetid -r)
@@ -127,7 +119,6 @@ _cpu
 _memory
 _net
 _disk_usage
-_scraped
 
 bspc subscribe report > "$PANEL_FIFO" &
 

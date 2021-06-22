@@ -24,7 +24,7 @@ super + c
     xtrlock
 
 super + d
-    dmenu_run
+    dmenu_run -c -l 20
 
 # quit/restart bspwm
 super + alt + {q,r}
@@ -54,7 +54,7 @@ super + {semicolon, n}
 
 # Load project setup
 super + shift + p
-    ls ~/.bro/projects | dmenu -p "Load Project: " | code_on_project.sh setup
+    ls ~/.bro/projects | dmenu -c -l 20 -p "Load Project: " | code_on_project.sh setup &2> /tmp/log.log
 
 #
 # state/flags
