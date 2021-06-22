@@ -1,0 +1,9 @@
+#!/bin/bash
+
+id=1001
+char="━"
+full=40
+brightness=`xbacklight | cut -d'.' -f 1`
+let "numdash = $brightness * $full / 100"
+dashes=$(for i in `seq $numdash`; do echo -n $char; done)
+id=$(dunstify -p -r $id "Brightness" "`printf "%3s" $brightness` $dashes")

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+id=1000
+char="-"
+full=40
+volpercent=`volume.sh | sed 's/%//g'`
+# Check if muted
+if [[ $volpercent == "MUTED" ]]; then
+    id=$(dunstify -p -r $id "Volume" $volpercent)
+else
+    let "numdash = $volpercent * $full / 100"
+    dashes=$(for i in `seq $numdash`; do echo -n $char; done)
+    id=$(dunstify -p -r $id "Volume" "`printf "%3s" $volpercent` $dashes")
+fi

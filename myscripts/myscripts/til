@@ -1,0 +1,15 @@
+#!/bin/python
+
+import requests
+
+url = 'https://bewakes.com/til/api/?random=1'
+
+try:
+    resp = requests.get(url)
+    data = resp.json()
+    items = data['items']
+    item = items[0]
+except Exception as e:
+    print("Can't get item. Check internet connection")
+else:
+    print(item['content'])

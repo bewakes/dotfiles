@@ -1,0 +1,11 @@
+#!/bin/bash
+
+branch_output=`git branch 2>/dev/null`
+if [[ $? -ne 0 ]]; then 
+    br=""
+else
+    br=`git branch 2>/dev/null | grep '*'| sed 's/[* ]//g' | sed 's/  //g'`
+    br="[$br]"
+fi
+
+echo $br""
