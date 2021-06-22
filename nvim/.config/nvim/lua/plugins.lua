@@ -1,11 +1,15 @@
 require 'paq-nvim' {
-    'bewakes/vim-rest-client';
+    -- 'bewakes/vim-rest-client';
 
-    -- {'junegunn/fzf', do = './install --bin'};
-    'junegunn/fzf.vim';
-    'scrooloose/nerdtree';
-    'w0rp/ale';
-    'tpope/vim-fugitive'; -- git diffs
+    -- paq
+    'savq/paq-nvim';
+
+    -- uttils
+    'junegunn/fzf.vim'; -- file finder
+    'scrooloose/nerdtree'; -- project viewer
+    'w0rp/ale'; -- linter
+    'tpope/vim-fugitive';
+    'airblade/vim-gitgutter'; -- git diffs
     'justinmk/vim-dirvish'; -- directory viewer
 
     -- color schemes
@@ -21,12 +25,14 @@ require 'paq-nvim' {
 
     -- haskell
     'alx741/vim-stylishask';
+    'raichoo/haskell-vim';
 
     -- js/ts
     'maxmellon/vim-jsx-pretty';
 
+    -- python
+
     -- lua
-    'tjdevries/nlua.nvim';
     'tjdevries/nlua.nvim';
 
     -- reload

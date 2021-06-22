@@ -48,7 +48,6 @@ handle:close()
 local stl = function()
     local m = mode()
     local modeblock = ((m == "INSERT") and 'InsertModeBlock') or 'ModeBlock'
-    print(m, modeblock)
     local branchinfo = ' ['..branch..'] '
     if (branch == '') then
         branchinfo = ''

@@ -3,11 +3,15 @@ local wo = vim.wo
 local bo = vim.bo
 
 -- global vars
-vim.g.airlinei_powerline_fonts = 1
-vim.g.python3_host_prog = 'python'
+vim.g.loaded_python_provider = 0
+vim.g.python3_host_prog = '/home/bibek/.pyenv/shims/python'
 
 
 -- global options
+o.shiftwidth = 4
+o.expandtab = true
+o.tabstop = 4
+
 o.splitright = true
 o.smartindent = true
 o.swapfile = false
@@ -23,7 +27,7 @@ o.foldlevelstart = 10
 o.list = true  -- show invisible characters
 o.termguicolors = true
 o.title = true
-o.completeopt = 'menuone,longest,noinsert'
+o.completeopt = 'menuone,longest,noinsert,noselect'
 o.pumblend = 10
 
 
