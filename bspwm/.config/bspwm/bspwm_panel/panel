@@ -1,6 +1,9 @@
 #! /bin/sh
 
+PANEL_WM_NAME=lemonbar-bspwm-panel
+
 BASE=~/.config/bspwm/bspwm_panel
+echo $(xdo id -a "$PANEL_WM_NAME" > /dev/null)
 
 if xdo id -a "$PANEL_WM_NAME" > /dev/null ; then
 	printf "%s\n" "The panel is already running." >&2
@@ -104,7 +107,9 @@ _battery() {
 
         color=$(_get_level_color $pct 70 21)
         echo  "B%{F$color}$val" > "$PANEL_FIFO" &
-        sleep 3s
+
+        on_battery_low.sh # in custom_bins
+        sleep 5s
     done &
 }
 

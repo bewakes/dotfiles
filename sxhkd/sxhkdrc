@@ -52,6 +52,10 @@ super + shift + {j, k}
 super + {semicolon, n}
     scratchpad.sh {assistant "assistant", notes "nvim /tmp/scratchnote"}
 
+# Load project setup
+super + shift + p
+    ls ~/.bro/projects | dmenu -p "Load Project: " | code_on_project.sh setup
+
 #
 # state/flags
 #
@@ -89,6 +93,22 @@ super + ctrl + shift + space
 #
 # move/resize
 #
+
+# Insert receptacle
+super + i; {h,j,k,l}
+    bspc node --presel-dir {west,south,north,east} -i
+
+# Close all receptacle
+super + shift + i
+    for win in $(bspc query -N -n .leaf.\!window); do bspc node $win -k; done;
+
+# Move to receptacle
+super + r
+    bspc node $(bspc query -N -n focused) -n $(bspc query -N -n .leaf.\!window)
+
+# Balance nodes
+super + e
+    bspc node @/ -B
 
 # expand a window by moving one of its side outward
 super + alt + {h,j,k,l}
