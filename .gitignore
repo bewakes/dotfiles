@@ -1,3 +1,6 @@
 .mypy_cache/
 *.bak.*
 .bashrc
+.stack-work/
+*.hi
+*.o

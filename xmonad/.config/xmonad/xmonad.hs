@@ -11,6 +11,7 @@ import           XMonad.Util.Loggers
 import           XMonad.Util.Ungrab
 
 import           XMonad.Layout.Magnifier
+import           XMonad.Layout.NoBorders
 import           XMonad.Layout.ThreeColumns
 
 import           XMonad.Hooks.EwmhDesktops
@@ -25,7 +26,7 @@ main = xmonad
 
 myConfig = def
     { modMask    = mod4Mask      -- Rebind Mod to the Super key
-    , layoutHook = myLayout      -- Use custom layouts
+    , layoutHook = smartBorders myLayout      -- Use custom layouts
     , manageHook = myManageHook  -- Match on certain windows
     }
   `additionalKeysP` myKeys
@@ -69,8 +70,8 @@ myXmobarPP = def
     , ppExtras          = [logTitles formatFocused formatUnfocused]
     }
   where
-    formatFocused   = wrap (white    "[") (white    "]") . magenta . ppWindow
-    formatUnfocused = wrap (lowWhite "[") (lowWhite "]") . blue    . ppWindow
+    formatFocused   = wrap (white    "[") (white    "]") . blue . ppWindow
+    formatUnfocused = wrap (lowWhite "[") (lowWhite "]") . gray    . ppWindow
 
     -- | Windows should have *some* title, which should not not exceed a
     -- sane length.
@@ -79,8 +80,9 @@ myXmobarPP = def
 
     blue, lowWhite, magenta, red, white, yellow :: String -> String
     magenta  = xmobarColor "#ff79c6" ""
-    blue     = xmobarColor "#bd93f9" ""
+    blue     = xmobarColor "#bd93ff" ""
     white    = xmobarColor "#f8f8f2" ""
     yellow   = xmobarColor "#f1fa8c" ""
     red      = xmobarColor "#ff5555" ""
+    gray     = xmobarColor "#777777" ""
     lowWhite = xmobarColor "#bbbbbb" ""
