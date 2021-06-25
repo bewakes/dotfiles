@@ -7,7 +7,7 @@ Config { overrideRedirect = False
                           [ "-L", "3"
                           , "-H", "50"
                           , "--high"  , "red"
-                          , "--normal", "green"
+                          , "--normal", "orange"
                           , "CPU: <usedratio>%"
                           ] 10
                       , Run Alsa "default" "Master"

@@ -1,3 +1,4 @@
+import           System.Exit
 import           XMonad
 
 import           XMonad.Hooks.DynamicLog
@@ -5,9 +6,11 @@ import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
 import           XMonad.Hooks.StatusBar
 import           XMonad.Hooks.StatusBar.PP
+import qualified XMonad.StackSet             as W
 
 import           XMonad.Util.EZConfig
 import           XMonad.Util.Loggers
+import           XMonad.Util.NamedScratchpad
 import           XMonad.Util.Ungrab
 
 import           XMonad.Layout.Magnifier
@@ -16,6 +19,18 @@ import           XMonad.Layout.ThreeColumns
 
 import           XMonad.Hooks.EwmhDesktops
 
+
+restartNotify = "notify-send 'Restarting xmonad. Please wait...';"
+restartSuccess = "notify-send 'Restarted.';"
+restartFail = "notify-send 'Could not Restart xonad';"
+compileFail = " 2> /tmp/_xmonad-reompile || (" ++ restartFail
+                ++ " termite -e 'nvim /tmp/_xmonad-recompile' &); "
+restartCmd = restartNotify
+        ++ "if type xmonad; then xmonad --recompile && xmonad --restart " ++ compileFail
+        ++ restartSuccess
+        ++ "else xmessage xmonad not in \\$PATH: \"$PATH\";"
+        ++ restartFail
+        ++ "fi"
 
 main :: IO ()
 main = xmonad
@@ -30,7 +45,10 @@ myConfig = def
     , manageHook = myManageHook  -- Match on certain windows
     }
   `additionalKeysP` myKeys
-  `removeKeys` [(mod4Mask .|. shiftMask, xK_c)]
+  `removeKeys`
+      [ (mod4Mask .|. shiftMask, xK_c)
+      , (mod4Mask .|. shiftMask, xK_q)
+      ]
 
 
 myTerminal = "termite"
@@ -40,15 +58,20 @@ myKeys =
     , ("M-<Return>", spawn myTerminal)
     , ("M-d", spawn "dmenu_run -c -l 20")
     , ("M-c", spawn "xtrlock")
+    , ("M-S-r", spawn restartCmd)
+    , ("M-S-C-q", io (exitWith ExitSuccess))
     , ("M-C-+", sendMessage MagnifyMore)
     , ("M-C--", sendMessage MagnifyLess)
+    , ("M-;", namedScratchpadAction myScratchPads "assistant")
+    , ("M-n", namedScratchpadAction myScratchPads "notes")
     ]
 
 myManageHook :: ManageHook
 myManageHook = composeAll
     [ className =? "Gimp" --> doFloat
     , isDialog            --> doFloat
-    ]
+    ] <+>
+    namedScratchpadManageHook myScratchPads
 
 myLayout = tiled ||| Mirror tiled ||| Full ||| threeCol
   where
@@ -86,3 +109,22 @@ myXmobarPP = def
     red      = xmobarColor "#ff5555" ""
     gray     = xmobarColor "#777777" ""
     lowWhite = xmobarColor "#bbbbbb" ""
+
+
+myScratchPads =
+    [ NS
+        "assistant"
+        "termite --class assistant -e assistant"
+        (className =? "assistant")
+        (customFloating $ W.RationalRect l t w h)
+    , NS
+        "notes"
+        "termite --class notes -e 'nvim /tmp/notes'"
+        (className =? "notes")
+        (customFloating $ W.RationalRect (1/6) (1/6) (1/3) (1/3))
+    ]
+      where
+        w = 0.4
+        h = 0.3
+        l = 1 - w
+        t = 0.7
