@@ -16,6 +16,9 @@ import           XMonad.Util.Ungrab
 import           XMonad.Layout.Magnifier
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.ThreeColumns
+import           XMonad.Prompt
+import qualified XMonad.Prompt.ConfirmPrompt as Cprmt
+import           XMonad.Prompt.Man
 
 import           XMonad.Hooks.EwmhDesktops
 
@@ -26,7 +29,7 @@ restartFail = "notify-send 'Could not Restart xonad';"
 compileFail = " 2> /tmp/_xmonad-reompile || (" ++ restartFail
                 ++ " termite -e 'nvim /tmp/_xmonad-recompile' &); "
 restartCmd = restartNotify
-        ++ "if type xmonad; then xmonad --recompile && xmonad --restart " ++ compileFail
+        ++ "if type xmonad; then xmonad --recompile && xmonad --restart && sleep 0.6s " ++ compileFail
         ++ restartSuccess
         ++ "else xmessage xmonad not in \\$PATH: \"$PATH\";"
         ++ restartFail
@@ -41,6 +44,8 @@ main = xmonad
 
 myConfig = def
     { modMask    = mod4Mask      -- Rebind Mod to the Super key
+    , normalBorderColor = "#555555"
+    , focusedBorderColor = "#9999bb"
     , layoutHook = smartBorders myLayout      -- Use custom layouts
     , manageHook = myManageHook  -- Match on certain windows
     }
@@ -58,8 +63,9 @@ myKeys =
     , ("M-<Return>", spawn myTerminal)
     , ("M-d", spawn "dmenu_run -c -l 20")
     , ("M-c", spawn "xtrlock")
+    , ("M-m", manPrompt def)
     , ("M-S-r", spawn restartCmd)
-    , ("M-S-C-q", io (exitWith ExitSuccess))
+    , ("M-S-C-q", Cprmt.confirmPrompt def "Exit?" $ io (exitWith ExitSuccess))
     , ("M-C-+", sendMessage MagnifyMore)
     , ("M-C--", sendMessage MagnifyLess)
     , ("M-;", namedScratchpadAction myScratchPads "assistant")
@@ -85,7 +91,7 @@ myXmobarPP :: PP
 myXmobarPP = def
     { ppSep             = magenta " • "
     , ppTitleSanitize   = xmobarStrip
-    , ppCurrent         = wrap " " "" . xmobarBorder "Top" "#8be9fd" 2
+    , ppCurrent         = wrap " " "" . xmobarBorder "Bottom" "#8be9fd" 1
     , ppHidden          = white . wrap " " ""
     , ppHiddenNoWindows = lowWhite . wrap " " ""
     , ppUrgent          = red . wrap (yellow "!") (yellow "!")
@@ -93,7 +99,7 @@ myXmobarPP = def
     , ppExtras          = [logTitles formatFocused formatUnfocused]
     }
   where
-    formatFocused   = wrap (white    "[") (white    "]") . blue . ppWindow
+    formatFocused   = wrap (white    "[") (white    "]") . greenish . ppWindow
     formatUnfocused = wrap (lowWhite "[") (lowWhite "]") . gray    . ppWindow
 
     -- | Windows should have *some* title, which should not not exceed a
@@ -101,14 +107,14 @@ myXmobarPP = def
     ppWindow :: String -> String
     ppWindow = xmobarRaw . (\w -> if null w then "untitled" else w) . shorten 30
 
-    blue, lowWhite, magenta, red, white, yellow :: String -> String
+    greenish, lowWhite, magenta, red, white, yellow :: String -> String
     magenta  = xmobarColor "#ff79c6" ""
-    blue     = xmobarColor "#bd93ff" ""
+    greenish = xmobarColor "#7de37f" ""
     white    = xmobarColor "#f8f8f2" ""
     yellow   = xmobarColor "#f1fa8c" ""
     red      = xmobarColor "#ff5555" ""
     gray     = xmobarColor "#777777" ""
-    lowWhite = xmobarColor "#bbbbbb" ""
+    lowWhite = xmobarColor "#999999" ""
 
 
 myScratchPads =
@@ -121,10 +127,10 @@ myScratchPads =
         "notes"
         "termite --class notes -e 'nvim /tmp/notes'"
         (className =? "notes")
-        (customFloating $ W.RationalRect (1/6) (1/6) (1/3) (1/3))
+        (customFloating $ W.RationalRect (1/4) (1/4) (1/2) (1/2))
     ]
       where
-        w = 0.4
-        h = 0.3
-        l = 1 - w
-        t = 0.7
+        l = 5/16
+        h = 1.2/4
+        t = 1 - h
+        w = 1.5/4
