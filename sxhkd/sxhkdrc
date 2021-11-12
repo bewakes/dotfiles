@@ -2,17 +2,6 @@
 super + Escape
 	pkill -USR1 -x sxhkd; dunstify "Reloaded sxhkd"; 
 
-super + space
-    bsp-layout cycle
-
-
-super + ctrl + g
-    bsp-layout set grid
-
-
-super + ctrl + t
-    bsp-layout set tall
-
 super + Return
     termite
 

@@ -12,7 +12,7 @@ if [[ "$is_charging" == "" ]]; then
     exit 0
 fi
 
-if [[ $percent -lt 22 ]]; then
+if [[ $percent -lt 15 ]]; then
     notify-send 'Battery' 'Low!!'
     paplay /usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga
     a=2

@@ -19,7 +19,7 @@ o.smartcase = true
 o.laststatus = 2
 o.hlsearch = true
 o.incsearch = true
-o.ignorecase = true
+o.ignorecase = false
 o.scrolloff = 12
 o.cursorline = true
 o.colorcolumn = '80'
@@ -28,7 +28,7 @@ o.list = true  -- show invisible characters
 o.termguicolors = true
 o.title = true
 o.completeopt = 'menuone,longest,noinsert,noselect'
-o.pumblend = 10
+o.pumblend = 20
 
 
 -- window-local options
@@ -36,7 +36,7 @@ wo.number = true
 wo.wrap = false
 wo.foldmethod = 'indent'
 wo.foldenable = true
-wo.winblend = 5
+wo.winblend = 20
 
 -- buffer-local options
 bo.expandtab = true

@@ -1,5 +1,5 @@
 require 'paq-nvim' {
-    -- 'bewakes/vim-rest-client';
+    'bewakes/vim-rest-client';
 
     -- paq
     'savq/paq-nvim';
@@ -34,6 +34,9 @@ require 'paq-nvim' {
 
     -- lua
     'tjdevries/nlua.nvim';
+
+    -- purescript
+    'purescript-contrib/purescript-vim';
 
     -- reload
     'nvim-lua/plenary.nvim';

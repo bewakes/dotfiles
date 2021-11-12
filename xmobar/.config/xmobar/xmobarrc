@@ -28,7 +28,7 @@ Config { overrideRedirect = False
                                        , "-O"  , "<fc=#dAA520>Charging</fc>(<left>%)"
                                        -- charged status
                                        , "-i"  , "<fc=#006000>Charged</fc>"] 20
-                      , Run DiskU [("/", "<free>"), ("/home/bibek", "<free>")]
+                      , Run DiskU [("/", "<free>")]
                         ["-L", "20", "-H", "50", "-m", "1", "-p", "3",
                         "--normal", "yellow", "--high", "green",
                         "--low", "#magenta"] 20

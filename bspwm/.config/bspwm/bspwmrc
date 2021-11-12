@@ -23,4 +23,4 @@ bspc rule -a scrape desktop=^7 follow=on
 
 # specific window rule
 bspc rule -a firefoxdeveloperedition desktop=^1 follow=on
-bspc rule -a Eclipse desktop=^9 follow=on
+bspc rule -a Eclipse desktop=^8 follow=on

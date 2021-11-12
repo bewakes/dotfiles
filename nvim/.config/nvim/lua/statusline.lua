@@ -31,9 +31,8 @@ end
 vim.api.nvim_exec(
 [[
     hi link InsertModeBlock InsertMode
-    hi link ModeBlock Cursor
-    hi link FileBlock Cursor
-    hi link BranchBlock Question
+    hi ModeBlock guibg=#859900 guifg=white
+    hi link FileBlock StatusLineNC
     hi link SecondaryBlock Question
     hi link Blanks StatusLine
     hi link FilePercentage DiffChange
@@ -48,14 +47,13 @@ handle:close()
 local stl = function()
     local m = mode()
     local modeblock = ((m == "INSERT") and 'InsertModeBlock') or 'ModeBlock'
-    local branchinfo = ' ['..branch..'] '
+    local branchinfo = '═╣'..branch..' '
     if (branch == '') then
         branchinfo = ''
     end
     return {
         '%#'..modeblock..'#',
         ' '..mode()..' ',
-        '%#BranchBlock#',
         branchinfo,
         '%#Blanks#',
         ' %f',
