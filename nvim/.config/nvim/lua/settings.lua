@@ -4,7 +4,8 @@ local bo = vim.bo
 
 -- global vars
 vim.g.loaded_python_provider = 0
-vim.g.python3_host_prog = '/home/bibek/.pyenv/shims/python'
+vim.g.python3_host_prog = '~/.pyenv/shims/python'
+-- vim.g.python3_host_prog = '/opt/homebrew/bin/python3'
 
 
 -- global options
@@ -47,3 +48,11 @@ bo.swapfile = false
 
 -- colorscheme
 vim.api.nvim_command('colorscheme solarized8')
+-- Set dark or light based on time
+local hour = tonumber(os.date("%H"))
+if (hour > 6 and hour < 18)
+    then
+        vim.api.nvim_command('set background=light')
+    else
+        vim.api.nvim_command('set background=dark')
+end

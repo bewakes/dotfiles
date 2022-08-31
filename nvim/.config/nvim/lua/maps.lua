@@ -18,7 +18,22 @@ end
 imap('<leader>e', '<Esc>')
 nmap('<leader>q', ':q<CR>')
 nmap('<leader>n', ':NERDTreeToggle<CR>')
-nmap('<C-w>', '<C-w>w')
+nmap('<leader>d', ':set background=dark<CR>')
+nmap('<leader>b', ':set background=light<CR>')
+nmap('<Tab>', 'gt')
+nmap('<S-Tab>', 'gT')
+-- Window commands
+nmap('<leader>h', '<C-w>h')
+nmap('<leader>j', '<C-w>j')
+nmap('<leader>k', '<C-w>k')
+nmap('<leader>l', '<C-w>l')
+nmap('<leader>=', '<C-w>=')
+-- nb commands
+nmap('<Leader>ww', ':!nb browse <CR>')
+nmap('<Leader>wi', ':!nb browse %:p:h:t/%:t <CR>')
+nmap('<Leader>wt', ':e `="~/.nb/home/Journal/" . expand(strftime("%Y-%m-%d")) . ".md"` <CR>')
+nmap('<Leader>wm', ':e `="~/.nb/home/Journal/" . expand(strftime("%Y-%m")) . ".md"` <CR>')
+-- nmap <Leader>wh :!nb export %:p:h:t/%:t ~/_site/%:t:r.html <CR>
 
 -- source
 nmap('<leader>s', ':Restart<CR>') -- requires nvim-reload and plenary
@@ -29,8 +44,6 @@ nmap('<C-p>', ':Files<CR>')
 
 -- buffers
 nmap('<C-b>', ':Buffers<CR>')
-nmap('<Tab>', 'gt')
-nmap('<S-Tab>', 'gT')
 
 -- Copying to clipboard
 vim.api.nvim_set_keymap('v', '<C-y>', '"+y', { noremap=true})
@@ -39,8 +52,9 @@ vim.api.nvim_set_keymap('v', '<C-y>', '"+y', { noremap=true})
 vim.cmd('nmap <leader>r :lua u.Run()<CR>')
 
 -- lsp specific
-options = { silent=true, }
+options = { silent=false, }
 
+nmap('<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', options)
 nmap('gd','<cmd>lua vim.lsp.buf.declaration()<CR>', options)
 nmap('<c-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', options)
 nmap('K', '<cmd>lua vim.lsp.buf.hover()<CR>', options)

@@ -1,11 +1,13 @@
-require 'paq-nvim' {
+require 'paq' {
     'bewakes/vim-rest-client';
 
     -- paq
     'savq/paq-nvim';
 
-    -- uttils
+    -- utils
+    'dhruvasagar/vim-table-mode',
     'junegunn/fzf.vim'; -- file finder
+    'junegunn/fzf';
     'scrooloose/nerdtree'; -- project viewer
     'w0rp/ale'; -- linter
     'tpope/vim-fugitive';
@@ -31,6 +33,9 @@ require 'paq-nvim' {
     'maxmellon/vim-jsx-pretty';
 
     -- python
+
+    -- go
+    'fatih/vim-go';
 
     -- lua
     'tjdevries/nlua.nvim';
