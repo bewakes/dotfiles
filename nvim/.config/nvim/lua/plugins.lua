@@ -20,10 +20,11 @@ require 'paq' {
     -- lsp clients
     'neovim/nvim-lsp';
     'neovim/nvim-lspconfig';
-    {'neoclide/coc.nvim', branch = 'release' };
+    -- {'neoclide/coc.nvim', branch = 'release' };
 
     -- completion
-    'nvim-lua/completion-nvim';
+    --  'hrsh7th/nvim-cmp';
+    -- 'nvim-lua/completion-nvim';
 
     -- haskell
     'alx741/vim-stylishask';

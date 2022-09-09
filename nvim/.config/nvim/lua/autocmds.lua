@@ -1,6 +1,6 @@
-vim.api.nvim_exec([[
-autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
-]], false)
+-- vim.api.nvim_exec([[
+-- autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
+-- ]], false)
 vim.api.nvim_exec([[
 autocmd FileType go setlocal noet ci pi sts=0 sw=4 ts=4
 ]], false)
