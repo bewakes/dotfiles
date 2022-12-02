@@ -31,7 +31,6 @@ o.title = true
 o.completeopt = 'menuone,longest,noinsert,noselect'
 o.pumblend = 20
 
-
 -- window-local options
 wo.number = true
 wo.wrap = false
@@ -44,19 +43,6 @@ bo.expandtab = true
 bo.shiftwidth = 4
 bo.tabstop = 4
 bo.swapfile = false
-
-
--- colorscheme
-vim.api.nvim_command('colorscheme solarized8')
-vim.api.nvim_command('set background=dark')
--- Set dark or light based on time
--- local hour = tonumber(os.date("%H"))
--- if (hour > 6 and hour < 18)
---     then
---         vim.api.nvim_command('set background=light')
---     else
---         vim.api.nvim_command('set background=dark')
--- end
 
 vim.cmd[[
 function! Build_quickfix_list(lines)

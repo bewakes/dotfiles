@@ -16,6 +16,7 @@ require 'paq' {
 
     -- color schemes
     'lifepillar/vim-solarized8';
+    'morhetz/gruvbox';
 
     -- lsp clients
     'neovim/nvim-lsp';
@@ -47,4 +48,7 @@ require 'paq' {
     -- reload
     'nvim-lua/plenary.nvim';
     'famiu/nvim-reload';
+
+    -- null-ls
+    'jose-elias-alvarez/null-ls.nvim';
 }
