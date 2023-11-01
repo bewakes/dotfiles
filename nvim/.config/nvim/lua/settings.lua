@@ -8,6 +8,7 @@ vim.g.python3_host_prog = '~/.pyenv/shims/python'
 -- vim.g.python3_host_prog = '/opt/homebrew/bin/python3'
 
 
+
 -- global options
 o.shiftwidth = 4
 o.expandtab = true

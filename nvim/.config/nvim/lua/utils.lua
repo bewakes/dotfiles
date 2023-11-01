@@ -55,10 +55,13 @@ M.Run = function ()
 	cmd('exec "!time stack runhaskell '..fullname..'"')
 	-- TODO: remove *.o and *.hi
     elseif ext == "c" then
-	cmd('exec "!gcc '..fullname..' -o '..path..'/'..name..'"')
-	cmd('exec "!time '..path..'/'..name..'"')
+        cmd('exec "!gcc '..fullname..' -o '..path..'/'..name..'"')
+        cmd('exec "!time '..path..'/'..name..'"')
     elseif ext == "js" or ext == "ts" or ext == "tsx" then
           cmd('exec "!node '..fullname..'"')
+    elseif ext == "rs" then
+        cmd('exec "!rustc '..fullname..' -o '..path..'/'..name..'"')
+        cmd('exec "!time '..path..'/'..name..'"')
     elseif ext == "tex" then
         cmd('exec "!xelatex  '..fullname..'"')
         -- cmd('exec "!bibtex  '..fullnameWoExt..'"')

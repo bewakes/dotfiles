@@ -16,6 +16,7 @@ local map = function (k, a)
 end
 
 imap('<leader>e', '<Esc>')
+imap('<leader>c', '<C-x><C-o>')
 nmap('<leader>q', ':q<CR>')
 nmap('<leader>n', ':NERDTreeToggle<CR>')
 nmap('<leader>d', ':set background=dark<CR>')
@@ -54,7 +55,7 @@ vim.cmd('nmap <leader>r :lua u.Run()<CR>')
 -- lsp specific
 options = { silent=false, }
 
-nmap('<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', options)
+nmap('<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', options)
 nmap('gd','<cmd>lua vim.lsp.buf.declaration()<CR>', options)
 nmap('<C-]>', '<cmd>lua vim.lsp.buf.definition()<CR>', options)
 nmap('K', '<cmd>lua vim.lsp.buf.hover()<CR>', options)
@@ -62,8 +63,8 @@ nmap('gD', '<cmd>lua vim.lsp.buf.implementation()<CR>', options)
 nmap('1gD', '<cmd>lua vim.lsp.buf.type_definition()<CR>', options)
 nmap('gr', '<cmd>lua vim.lsp.buf.references()<CR>', options)
 nmap('g0', '<cmd>lua vim.lsp.buf.document_symbol()<CR>', options)
-nmap('<c-j>', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', options)
-nmap('<c-k>', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', options)
+nmap('<c-j>', '<cmd>lua vim.diagnostic.goto_next()<CR>', options)
+nmap('<c-k>', '<cmd>lua vim.diagnostic.goto_prev()<CR>', options)
 
 -- vim.api.nvim_command([[
 -- autocmd FileType typescriptreact nmap <C-]> <Plug>(coc-definition)
