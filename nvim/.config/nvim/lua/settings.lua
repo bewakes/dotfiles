@@ -2,12 +2,13 @@ local o = vim.o
 local wo = vim.wo
 local bo = vim.bo
 
+-- set leader
+vim.g.mapleader = ';'
+
 -- global vars
 vim.g.loaded_python_provider = 0
-vim.g.python3_host_prog = '~/.pyenv/shims/python'
+vim.g.python3_host_prog = 'python3'
 -- vim.g.python3_host_prog = '/opt/homebrew/bin/python3'
-
-
 
 -- global options
 o.shiftwidth = 4
@@ -44,19 +45,3 @@ bo.expandtab = true
 bo.shiftwidth = 4
 bo.tabstop = 4
 bo.swapfile = false
-
-vim.cmd[[
-function! Build_quickfix_list(lines)
-  call setqflist(map(copy(a:lines), '{ "filename": v:val }'))
-  copen
-  cc
-endfunction
-]]
-
-vim.cmd[[
-let g:fzf_action = {
-  \ 'ctrl-q': function('Build_quickfix_list'),
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
-]]
