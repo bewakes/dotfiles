@@ -15,6 +15,7 @@ end
 imap('<leader>e', '<Esc>')
 imap('<leader>c', '<C-x><C-o>')
 nmap('<leader>q', ':q<CR>')
+nmap('<leader>f', ':lua vim.lsp.buf.format()<CR>')
 nmap('<leader>n', ':NERDTreeToggle<CR>')
 nmap('<leader>bd', ':set background=dark<CR>')
 nmap('<leader>bl', ':set background=light<CR>')
@@ -62,7 +63,7 @@ options = { silent=false, }
 nmap('<leader>db', "<cmd>lua require('dap').toggle_breakpoint()<CR>")
 nmap('<leader>dc', "<cmd>lua require('dap').continue()<CR>")
 nmap('<leader>dso', ":DapStepOver<CR>")
-nmap('<leader>dsi', "<cmd>lua require('dap').step_into()<CR>")
+nmap('<leader>dsi', ":DapStepInto<CR>")
 
 -- vim.api.nvim_command([[
 -- autocmd FileType typescriptreact nmap <C-]> <Plug>(coc-definition)

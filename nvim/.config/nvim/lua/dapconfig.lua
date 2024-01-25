@@ -20,6 +20,9 @@ dap.adapters.lldb = {
   name = "lldb",
 }
 
+vim.keymap.set('n', '<leader>duo', dapui.open, {})
+vim.keymap.set('n', '<leader>dux', dapui.close, {})
+
 
 dap.configurations.rust = {
     {

@@ -17,7 +17,7 @@ require("lazy").setup({
     -- utils
     'scrooloose/nerdtree', -- project viewer
     -- 'w0rp/ale', -- linter, autocomplete
-    -- 'tpope/vim-fugitive',
+    'tpope/vim-fugitive',
     -- 'airblade/vim-gitgutter', -- git diffs
     'justinmk/vim-dirvish', -- directory viewer
     'nvim-lua/plenary.nvim',
@@ -30,21 +30,25 @@ require("lazy").setup({
 
     -- color schemes
     'ellisonleao/gruvbox.nvim',
-    'lifepillar/vim-solarized8',
+    { 'rose-pine/neovim', name = 'rose-pine' },
+    -- 'lifepillar/vim-solarized8',
 
-    -- lsp clients
+    -- LSP
+    {'neovim/nvim-lspconfig'},
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
-    -- 'neovim/nvim-lsp',
-    'neovim/nvim-lspconfig',
+    { "j-hui/fidget.nvim", opts = {} },
     --
     -- DAP
-    -- 'mfussenegger/nvim-dap',
-    -- 'rcarriga/nvim-dap-ui',
+    'mfussenegger/nvim-dap',
+    'rcarriga/nvim-dap-ui',
 
-    -- completion
-    -- 'hrsh7th/nvim-cmp',
-    -- 'nvim-lua/completion-nvim',
+    -- Completion
+    {'hrsh7th/cmp-nvim-lsp'},
+    {'hrsh7th/nvim-cmp'},
+    {'L3MON4D3/LuaSnip'},
+    'saadparwaiz1/cmp_luasnip',
+    'rafamadriz/friendly-snippets',
 
     -- haskell
     -- 'alx741/vim-stylishask',

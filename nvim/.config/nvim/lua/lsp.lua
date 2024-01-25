@@ -1,11 +1,11 @@
 require("mason").setup()
 require("mason-lspconfig").setup({
-    ensure_installed = { "rust_analyzer", "pyright", "tsserver", "lua_ls" }
+    ensure_installed = { "pyright", "tsserver", "lua_ls" }
 })
 
 local lsp = require('lspconfig')
 
-local on_attach = function(client, bufnr)
+local ON_ATTACH = function(client, bufnr)
     -- Enable completion triggered by <c-x><c-o>
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
@@ -19,10 +19,13 @@ local on_attach = function(client, bufnr)
     vim.keymap.set('n', '<c-k>', vim.diagnostic.goto_prev, {})
 end
 
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 local servers = { 'pyright', 'hls', 'gopls', 'tsserver', 'rust_analyzer', 'lua_ls' }
 for _, server in pairs(servers) do
     lsp[server].setup{
-        on_attach=on_attach,
+        on_attach=ON_ATTACH,
+        capabilities=capabilities,
         flags = {
           debounce_text_changes = 150,
         }
@@ -39,15 +42,20 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = "rounded"
 })
 
--- 
--- local rt = require("rust-tools")
--- rt.setup({
---   server = {
---     on_attach = function(_, bufnr)
---       -- Hover actions
---       vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
---       -- Code action groups
---       vim.keymap.set("n", "<Leader>a", rt.code_action_group.code_action_group, { buffer = bufnr })
---     end,
---   },
--- })
+local rt = require('rust-tools')
+rt.setup({
+    server = {
+        on_attach = function(client, bufnr)
+            ON_ATTACH(client, bufnr)
+            vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+        end,
+        settings = {
+          ["rust-analyzer"] = {
+            -- enable clippy on save
+            checkOnSave = {
+              command = "clippy --all --all-features --workspace --tests --benches --examples",
+            },
+          },
+        },
+    }
+})
