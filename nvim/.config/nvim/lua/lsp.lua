@@ -1,6 +1,6 @@
 require("mason").setup()
 require("mason-lspconfig").setup({
-    ensure_installed = { "pyright", "tsserver", "lua_ls" }
+    ensure_installed = { "pyright", "tsserver", "lua_ls", "clangd" }
 })
 
 local lsp = require('lspconfig')
@@ -21,7 +21,7 @@ end
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-local servers = { 'pyright', 'hls', 'gopls', 'tsserver', 'rust_analyzer', 'lua_ls' }
+local servers = { 'pyright', 'hls', 'gopls', 'tsserver', 'rust_analyzer', 'lua_ls', 'clangd' }
 for _, server in pairs(servers) do
     lsp[server].setup{
         on_attach=ON_ATTACH,
@@ -42,20 +42,21 @@ vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = "rounded"
 })
 
-local rt = require('rust-tools')
-rt.setup({
-    server = {
-        on_attach = function(client, bufnr)
-            ON_ATTACH(client, bufnr)
-            vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
-        end,
-        settings = {
-          ["rust-analyzer"] = {
-            -- enable clippy on save
-            checkOnSave = {
-              command = "clippy --all --all-features --workspace --tests --benches --examples",
-            },
-          },
-        },
-    }
-})
+-- local rt = require('rust-tools')
+-- rt.setup({
+--     server = {
+--         on_attach = function(client, bufnr)
+--             ON_ATTACH(client, bufnr)
+--             vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
+--         end,
+--         settings = {
+--           ["rust-analyzer"] = {
+--             -- enable clippy on save
+--             checkOnSave = {
+--               command = "+1.78.0 clippy --all --all-features --workspace --tests --benches --examples",
+--               -- command = "clippy",
+--             },
+--           },
+--         },
+--     }
+-- })

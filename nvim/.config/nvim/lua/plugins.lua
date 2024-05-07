@@ -50,13 +50,25 @@ require("lazy").setup({
     'saadparwaiz1/cmp_luasnip',
     'rafamadriz/friendly-snippets',
 
+    -- test
+    {
+      "nvim-neotest/neotest",
+      dependencies = {
+        "nvim-neotest/nvim-nio",
+        "nvim-lua/plenary.nvim",
+        "antoinemadec/FixCursorHold.nvim",
+        "nvim-treesitter/nvim-treesitter"
+      }
+    },
+    'rouge8/neotest-rust',
+
     -- haskell
     -- 'alx741/vim-stylishask',
     -- 'raichoo/haskell-vim',
 
     -- rust
     'rust-lang/rust.vim',
-    'simrat39/rust-tools.nvim',
+    -- 'simrat39/rust-tools.nvim',
 
     -- js/ts
     'maxmellon/vim-jsx-pretty',
