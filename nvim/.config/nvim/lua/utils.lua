@@ -48,7 +48,7 @@ M.Run = function ()
     if ext == "go" then
     cmd('exec "!time go run '..fullname..'"')
     elseif ext == "py" then
-	cmd('exec "!time python '..fullname..'"')
+	cmd('exec "!time python3 '..fullname..'"')
     elseif ext == "sh" then
 	cmd('exec "!time sh '..fullname..'"')
     elseif ext == "hs" then

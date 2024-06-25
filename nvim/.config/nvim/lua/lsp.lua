@@ -11,7 +11,7 @@ local ON_ATTACH = function(client, bufnr)
 
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
     vim.keymap.set('n', 'ca', vim.lsp.buf.code_action, {})
-    vim.keymap.set('n', '<C-]>', vim.lsp.buf.definition, {})
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, {})
     vim.keymap.set('n', 'gD', vim.lsp.buf.implementation, {})
     vim.keymap.set('n', 'gr', require('telescope.builtin').lsp_references, {})
     vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, {})
@@ -41,22 +41,3 @@ vim.diagnostic.config({
 vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
     border = "rounded"
 })
-
--- local rt = require('rust-tools')
--- rt.setup({
---     server = {
---         on_attach = function(client, bufnr)
---             ON_ATTACH(client, bufnr)
---             vim.keymap.set("n", "<C-space>", rt.hover_actions.hover_actions, { buffer = bufnr })
---         end,
---         settings = {
---           ["rust-analyzer"] = {
---             -- enable clippy on save
---             checkOnSave = {
---               command = "+1.78.0 clippy --all --all-features --workspace --tests --benches --examples",
---               -- command = "clippy",
---             },
---           },
---         },
---     }
--- })

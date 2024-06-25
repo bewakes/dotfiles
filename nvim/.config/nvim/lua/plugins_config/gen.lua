@@ -1,0 +1,3 @@
+-- `require('gen').setup({
+-- `  -- same as above
+-- `})

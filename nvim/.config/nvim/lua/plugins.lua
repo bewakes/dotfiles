@@ -12,7 +12,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
-    'bewakes/vim-rest-client',
+    -- 'bewakes/vim-rest-client',
 
     -- utils
     'scrooloose/nerdtree', -- project viewer
@@ -27,6 +27,7 @@ require("lazy").setup({
         'nvim-telescope/telescope.nvim',
         requires = { { 'nvim-lua/plenary.nvim'} }
     },
+    'nvim-telescope/telescope-ui-select.nvim',
 
     -- color schemes
     'ellisonleao/gruvbox.nvim',
@@ -60,33 +61,17 @@ require("lazy").setup({
         "nvim-treesitter/nvim-treesitter"
       }
     },
-    'rouge8/neotest-rust',
-
     -- haskell
     -- 'alx741/vim-stylishask',
     -- 'raichoo/haskell-vim',
 
     -- rust
     'rust-lang/rust.vim',
-    -- 'simrat39/rust-tools.nvim',
-
-    -- js/ts
-    'maxmellon/vim-jsx-pretty',
-
-    -- python
-
-    -- go
-    -- 'fatih/vim-go',
+    'rouge8/neotest-rust',
 
     -- lua
     'tjdevries/nlua.nvim',
 
-    -- purescript
-    -- 'purescript-contrib/purescript-vim',
-
-    -- reload
-    -- 'famiu/nvim-reload',
-
-    -- null-ls
-    -- 'jose-elias-alvarez/null-ls.nvim',
+    -- Genai
+    "David-Kunz/gen.nvim",
 });

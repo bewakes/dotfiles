@@ -6,8 +6,17 @@ require'telescope'.setup{
                 ["<c-j>"] = require("telescope.actions").move_selection_next,
             }
         }
+    },
+    extensions = {
+        ["ui-select"] = {
+            require("telescope.themes").get_dropdown {
+              -- even more opts
+            }
+        }
     }
 }
+
+require("telescope").load_extension("ui-select")
 
 local builtin = require('telescope.builtin')
 
