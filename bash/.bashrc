@@ -114,6 +114,8 @@ if ! shopt -oq posix; then
   elif [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
   fi
+elif [ -f /opt/homebrew/etc/bash_completion.d/git-completion.bash ]; then
+  . /opt/homebrew/etc/bash_completion.d/git-completion.bash
 fi
 
 export PATH="$PATH:$HOME/practices/shell/bin/:/home/bibek/.local/bin"
@@ -149,7 +151,7 @@ alias checkmic="ffmpeg -f alsa -i hw:1 -t 10 output.wav"
 ### Bro
 export BRO_STATION=/home/bibek/.bro
 export WORKSTATION=/home/bibek/projects
-source ~/.bro/activate
+# source ~/.bro/activate
 
 # alias for onnecting to taskfore
 alias ssh="TERM=rxvt ssh"
@@ -158,7 +160,7 @@ alias ls='ls --color'
 
 export FZF_DEFAULT_COMMAND="rg --files"
 
-source ~/.fzf.bash
+# source ~/.fzf.bash
 
 PS1="\[\e[1m\e[95m\]\$(show-branch)\[\e[0m\]$PS1"
 
@@ -167,19 +169,12 @@ export ASSISTANT_DIR=~/projects/assistant/
 export TERM=screen-256color
 
 EDITOR=nvim
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
-
-search-logs() {
-    grep "$1" ~/.logs/commands -r | sort | awk '{$1=""; print $0}'
-}
+# search-logs() {
+#     grep "$1" ~/.logs/commands -r | sort | awk '{$1=""; print $0}'
+# }
 # set -o vi
 bind -m vi-command 'Control-l: clear-screen'
 bind -m vi-insert 'Control-l: clear-screen'
-
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
 
 # ports
 export PATH=/opt/local/bin:/opt/local/sbin:$PATH
@@ -192,3 +187,32 @@ alias bc="bitcoin-cli -regtest"
 
 . "$HOME/.cargo/env"
 export PATH="$HOME/.cargo/bin:$PATH"
+eval export HOMEBREW_PREFIX="/opt/homebrew";
+export HOMEBREW_CELLAR="/opt/homebrew/Cellar";
+export HOMEBREW_REPOSITORY="/opt/homebrew";
+export PATH="/opt/homebrew/bin:/opt/homebrew/sbin${PATH+:$PATH}";
+export MANPATH="/opt/homebrew/share/man${MANPATH+:$MANPATH}:";
+export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}";
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+export PATH="$PATH:/Users/bibek/.foundry/bin"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH=$BUN_INSTALL/bin:$PATH
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH=$BUN_INSTALL/bin:$PATH
+alias python="python3"
+PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
+export DEVKITPRO=/opt/devkitpro
+export DEVKITARM=/opt/devkitpro/devkitARM
+
+[ -f "/Users/bibek/.ghcup/env" ] && . "/Users/bibek/.ghcup/env" # ghcup-env

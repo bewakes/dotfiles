@@ -1,6 +1,6 @@
 require("mason").setup()
 require("mason-lspconfig").setup({
-    ensure_installed = { "pyright", "tsserver", "lua_ls", "clangd" }
+    ensure_installed = { "pyright", "tsserver", "lua_ls", "clangd", "hls" }
 })
 
 local lsp = require('lspconfig')
@@ -21,6 +21,20 @@ end
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+local settings = {
+    rust_analyzer = {
+        ["rust-analyzer"] = {
+            checkOnSave = {
+                enable = true,
+                command = "clippy"
+            },
+            diagnostics = {
+                enable = true
+            }
+        }
+    }
+}
+
 local servers = { 'pyright', 'hls', 'gopls', 'tsserver', 'rust_analyzer', 'lua_ls', 'clangd' }
 for _, server in pairs(servers) do
     lsp[server].setup{
@@ -28,7 +42,8 @@ for _, server in pairs(servers) do
         capabilities=capabilities,
         flags = {
           debounce_text_changes = 150,
-        }
+        },
+        settings=settings[server]
     }
 end
 

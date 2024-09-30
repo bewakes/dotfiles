@@ -62,8 +62,8 @@ require("lazy").setup({
       }
     },
     -- haskell
-    -- 'alx741/vim-stylishask',
-    -- 'raichoo/haskell-vim',
+    'alx741/vim-stylishask',
+    'raichoo/haskell-vim',
 
     -- rust
     'rust-lang/rust.vim',
