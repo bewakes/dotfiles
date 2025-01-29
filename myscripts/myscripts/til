@@ -1,15 +1,11 @@
-#!/bin/python
+#!/bin/bash
 
-import requests
+NB_PATH=~/.nb/home/til.md
 
-url = 'https://bewakes.com/til/api/?random=1'
+if [ "$1" == "-show" ]; then
+    tail -n +4 $NB_PATH
+    exit 0;
+fi
 
-try:
-    resp = requests.get(url)
-    data = resp.json()
-    items = data['items']
-    item = items[0]
-except Exception as e:
-    print("Can't get item. Check internet connection")
-else:
-    print(item['content'])
+d=$(date '+%Y %b %d')
+echo "- $d: $@" >> $NB_PATH

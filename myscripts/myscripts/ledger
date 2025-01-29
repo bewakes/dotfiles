@@ -1,0 +1,171 @@
+#!/usr/bin/env python3
+
+#!/usr/bin/env python3
+
+import sys
+import os
+from datetime import datetime, timedelta
+from difflib import get_close_matches
+
+# Shorthand mappings for accounts and assets
+ACCOUNT_MAPPING = {
+    # Expenses
+    'g': 'expenses:groccery',
+    't': 'expenses:utils:transportation',
+    'u': 'expenses:utils',
+    'p': 'expenses:personal_interests',
+    'c': 'expenses:charges',
+    'm': 'expenses:misc',
+    'f': 'expenses:family',
+    'h': 'expenses:health',
+    'r': 'expenses:rent',
+    's': 'expenses:stock_fees',
+    'tax': 'expenses:tax',
+    'topup': 'expenses:topup',
+    'trip': 'expenses:trip:thailand',
+    'haircut': 'expenses:utils:haircut',
+    'newspaper': 'expenses:utils:newspaper',
+    'toothpaste': 'expenses:utils:toothpaste',
+    'sastoshare': 'expenses:utils:sastoshare',
+    'sirak': 'expenses:utils:sirak',
+    # Assets
+    'cash': 'assets:cash',
+    'nimb': 'assets:bank:saving_nimb',
+    'nabil': 'assets:bank:saving_nabil',
+    'bhat': 'assets:currency:bhat',
+    'usd': 'assets:currency:usd',
+    'khalti': 'assets:khalti',
+    'stocks': 'assets:stocks',
+    'stocks_collateral': 'assets:stocks_collateral',
+    'sip': 'assets:sip',
+    'ssf': 'assets:ssf',
+    'ssf_returns': 'assets:ssf_returns',
+    'rfd1': 'assets:saving:rfd1',
+    'rfd2': 'assets:saving:rfd2',
+    # Income
+    'dividend': 'income:dividend',
+    'interest': 'income:interest',
+    'refund': 'income:refund',
+    'jobs': 'income:jobs',
+    'alpenlabs': 'income:jobs:alpenlabs',
+    'careerlink': 'income:jobs:careerlink',
+    # Home
+    'baba': 'home:baba',
+    'bidhan': 'home:bidhan',
+    'mamu': 'home:mamu',
+}
+
+# Full list of accounts for auto-suggest
+ALL_ACCOUNTS = [
+    "assets:cash", "assets:bank:saving_nimb", "assets:bank:saving_nabil",
+    "assets:currency:bhat", "assets:currency:usd", "assets:khalti",
+    "assets:loans:ashish", "assets:loans:sunil_dai", "assets:saving:rfd1",
+    "assets:saving:rfd2", "assets:sip", "assets:ssf", "assets:ssf_returns",
+    "assets:stocks", "assets:stocks_collateral", "expenses:groccery",
+    "expenses:utils:transportation", "expenses:personal_interests",
+    "expenses:charges", "expenses:misc", "expenses:family", "expenses:health",
+    "expenses:rent", "expenses:stock_fees", "expenses:tax", "expenses:topup",
+    "expenses:trip:thailand", "expenses:utils:haircut", "expenses:utils:newspaper",
+    "expenses:utils:toothpaste", "expenses:utils:sastoshare", "expenses:utils:sirak",
+    "income:dividend", "income:interest", "income:refund", "income:jobs:alpenlabs",
+    "income:jobs:careerlink", "home:baba", "home:bidhan", "home:mamu",
+]
+
+def get_account(shorthand):
+    """Get the full account name from shorthand or suggest the closest match."""
+    if shorthand in ACCOUNT_MAPPING:
+        return ACCOUNT_MAPPING[shorthand]
+    else:
+        matches = get_close_matches(shorthand, ALL_ACCOUNTS, n=1)
+        if matches:
+            return matches[0]
+        else:
+            return shorthand  # Fallback to the input if no match is found
+
+def generate_title(account, amount):
+    """Generate a dynamic title based on the account and amount."""
+    if account.startswith("expenses:"):
+        category = account.split(":")[-1]
+        return f"{category.capitalize()} Expense"
+    elif account.startswith("income:"):
+        category = account.split(":")[-1]
+        return f"{category.capitalize()} Income"
+    elif account.startswith("assets:"):
+        return f"Transfer to {account.split(':')[-1].capitalize()}"
+    else:
+        return "Transaction"
+
+def parse_date(date_str):
+    """Parse a date string like 'today', 'yesterday', '-1', '-2', etc."""
+    today = datetime.now().date()
+    if date_str.lower() == "today":
+        return today
+    elif date_str.lower() == "yesterday":
+        return today - timedelta(days=1)
+    elif date_str.startswith("-"):
+        try:
+            offset = int(date_str)
+            return today - timedelta(days=-offset)
+        except ValueError:
+            print(f"Invalid date offset: {date_str}. Using today's date.")
+            return today
+    else:
+        try:
+            return datetime.strptime(date_str, "%Y-%m-%d").date()
+        except ValueError:
+            print(f"Invalid date format: {date_str}. Using today's date.")
+            return today
+
+def parse_command(args):
+    if len(args) < 4:
+        print("Usage: expenses add <account_shorthand> <asset_shorthand> <amount> [comment]")
+        sys.exit(1)
+    
+    # Check if the first argument is a date offset (e.g., -1, -2, yesterday)
+    date_str = "today"  # Default to today
+    if args[2].lstrip("-").isdigit() or args[2].lower() in ["today", "yesterday"]:
+        date_str = args[2]
+        args = args[:2] + args[3:]  # Remove the date argument from the list
+    
+    account_shorthand = args[2]
+    asset_shorthand = args[3]
+    amount = args[4]
+    comment = " ".join(args[5:]) if len(args) > 5 else ""
+    
+    # Get full account names from shorthand or auto-suggest
+    account = get_account(account_shorthand)
+    asset = get_account(asset_shorthand)
+    
+    # Parse the date
+    date = parse_date(date_str)
+    
+    # Generate the entry
+    title = generate_title(account, amount)
+    entry = f"{date} * {title}\n"
+    entry += f"    {account.ljust(40)} NRs {float(amount):.2f}"
+    if comment:
+        entry += f"          ; {comment}"
+    entry += f"\n    {asset.ljust(40)} NRs {-float(amount):.2f}"
+    
+    return entry
+
+def main():
+    if len(sys.argv) < 2 or sys.argv[1] != "add":
+        print("Usage: expenses add [date_offset] <account_shorthand> <asset_shorthand> <amount> [comment]")
+        print("  date_offset: Optional. Use 'today', 'yesterday', or a negative number like -1, -2, etc.")
+        sys.exit(1)
+    
+    entry = parse_command(sys.argv)
+    print("\nGenerated hledger entry:\n")
+    print(entry)
+    
+    # Optionally, save to a file
+    FILENAME = os.path.expanduser("~/.hledger.journal")
+    save = input("\nDo you want to save this entry to a file? (y/n): ").lower()
+    if save == 'y':
+        with open(FILENAME, 'a') as file:
+            file.write(entry + "\n\n")
+        print(f"Entry saved to {FILENAME}")
+
+if __name__ == "__main__":
+    main()
