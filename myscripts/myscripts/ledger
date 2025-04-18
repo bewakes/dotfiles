@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-#!/usr/bin/env python3
-
 import sys
 import os
 from datetime import datetime, timedelta
@@ -21,13 +19,13 @@ ACCOUNT_MAPPING = {
     'r': 'expenses:rent',
     's': 'expenses:stock_fees',
     'tax': 'expenses:tax',
-    'topup': 'expenses:topup',
+    'topup': 'expenses:utils:topup',
     'trip': 'expenses:trip:thailand',
     'haircut': 'expenses:utils:haircut',
     'newspaper': 'expenses:utils:newspaper',
     'toothpaste': 'expenses:utils:toothpaste',
     'sastoshare': 'expenses:utils:sastoshare',
-    'sirak': 'expenses:utils:sirak',
+    'utils': 'expenses:utils',
     # Assets
     'cash': 'assets:cash',
     'nimb': 'assets:bank:saving_nimb',
@@ -66,7 +64,7 @@ ALL_ACCOUNTS = [
     "expenses:charges", "expenses:misc", "expenses:family", "expenses:health",
     "expenses:rent", "expenses:stock_fees", "expenses:tax", "expenses:topup",
     "expenses:trip:thailand", "expenses:utils:haircut", "expenses:utils:newspaper",
-    "expenses:utils:toothpaste", "expenses:utils:sastoshare", "expenses:utils:sirak",
+    "expenses:utils:toothpaste", "expenses:utils:sastoshare", "expenses:utils",
     "income:dividend", "income:interest", "income:refund", "income:jobs:alpenlabs",
     "income:jobs:careerlink", "home:baba", "home:bidhan", "home:mamu",
 ]

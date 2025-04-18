@@ -1,11 +1,161 @@
-#!/bin/bash
+#!/usr/bin/env python3
 
-NB_PATH=~/.nb/home/til.md
+import sys
+import os
+import hashlib
+from datetime import datetime
+from typing import Tuple
 
-if [ "$1" == "-show" ]; then
-    tail -n +4 $NB_PATH
-    exit 0;
-fi
+# File to store TIL items
+TIL_FILE = os.path.expanduser("~/.nb/home/til.md")
 
-d=$(date '+%Y %b %d')
-echo "- $d: $@" >> $NB_PATH
+def generate_hash():
+    """Generate a unique 6-character hash."""
+    return hashlib.sha1(os.urandom(32)).hexdigest()[:6]
+
+def load_til_items() -> Tuple[str, dict[str, list[str]]]:
+    """Load TIL items from the Markdown file, grouped by date."""
+    if not os.path.exists(TIL_FILE):
+        return ("", {})  # empty meta
+    
+    with open(TIL_FILE, "r") as file:
+        lines = file.readlines()
+    
+    til_items = {}
+    current_date = None
+    current_items = []
+    skip_metadata = False
+
+    metadata = ""
+
+    for line in lines:
+        if line.startswith("---"):  # Pandoc metadata block
+            skip_metadata = not skip_metadata  # Toggle flag
+            continue
+        if skip_metadata:
+            metadata += line + "\n"
+            continue  # Skip lines within the metadata block
+
+        if line.startswith("## "):  # Date header
+            if current_date and current_items:
+                til_items[current_date] = current_items
+            current_date = line.strip().strip("## ").strip()
+            current_items = []
+        elif line.startswith("- #"):  # TIL item
+            current_items.append(line.strip())
+    
+    if current_date and current_items:
+        til_items[current_date] = current_items
+    
+    return metadata, til_items
+
+def save_til_items(metadata, til_items):
+    """Save TIL items to the Markdown file, grouped by date."""
+    with open(TIL_FILE, "w") as file:
+        # write metatdata
+        file.write("---\n")
+        file.write(metadata)
+        file.write("---\n")
+        for date, items in til_items.items():
+            file.write(f"## {date}\n\n")
+            for item in items:
+                file.write(f"{item}\n")
+            file.write("\n")
+
+def add_til_item(item):
+    """Add a new TIL item with a unique hash and timestamp."""
+    timestamp = datetime.now()
+    date_str = timestamp.strftime("%Y-%m-%d")
+    time_str = timestamp.strftime("%H:%M")
+    item_hash = f"#{generate_hash()}"  # Generate a unique hash
+    
+    metadata, til_items = load_til_items()
+    
+    if date_str not in til_items:
+        til_items[date_str] = []
+    
+    # Add the item with a hash, timestamp, and Markdown formatting
+    til_items[date_str].append(f"- {item_hash}[_{time_str}_] {item}")
+    
+    save_til_items(metadata, til_items)
+    print(f"TIL item added successfully! Hash: {item_hash}")
+
+def remove_til_item(item_hash):
+    """Remove a TIL item by its hash."""
+    m, til_items = load_til_items()
+    found = False
+    
+    for date, items in til_items.items():
+        for i, item in enumerate(items):
+            if f"- #{item_hash}" in item:
+                del items[i]
+                found = True
+                break
+        if found:
+            break
+    
+    if found:
+        save_til_items(m, til_items)
+        print(f"TIL item with hash {item_hash} removed successfully!")
+    else:
+        print(f"Error: No TIL item found with hash {item_hash}.")
+
+def view_til_items():
+    """View all TIL items, grouped by date in Markdown format."""
+    _, til_items = load_til_items()
+    
+    if not til_items:
+        print("No TIL items found.")
+        return
+    
+    for date, items in til_items.items():
+        print(f"## {date}\n")
+        for item in items:
+            print(item)
+        print()
+
+def print_usage():
+    """Print usage instructions."""
+    print("Usage:")
+    print("  til add <item>  - Add a new TIL item")
+    print("  til add         - Add a multi-line TIL item (use 'EOF' as delimiter)")
+    print("  til view        - View all TIL items in Markdown format")
+    print("  til remove <hash> - Remove a TIL item by its hash")
+
+def main():
+    if len(sys.argv) < 2:
+        print_usage()
+        return
+
+    command = sys.argv[1].lower()
+
+    if command == "add":
+        if len(sys.argv) > 2:
+            # Single-line TIL item
+            item = " ".join(sys.argv[2:])
+            add_til_item(item)
+        else:
+            # Multi-line TIL item
+            print("Enter your TIL item (type 'EOF' on a new line to finish):")
+            lines = []
+            while True:
+                line = input()
+                if line.strip() == "EOF":
+                    break
+                lines.append(line)
+            item = "\n".join(lines)
+            add_til_item(item)
+    elif command == "view":
+        view_til_items()
+    elif command == "remove":
+        if len(sys.argv) < 3:
+            print("Error: Please provide a hash to remove.")
+            return
+        item_hash = sys.argv[2]
+        remove_til_item(item_hash)
+    else:
+        print(f"Error: Unknown command '{command}'.")
+        print_usage()
+
+if __name__ == "__main__":
+    main()
