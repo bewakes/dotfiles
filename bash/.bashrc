@@ -210,9 +210,21 @@ export PATH=$BUN_INSTALL/bin:$PATH
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH=$BUN_INSTALL/bin:$PATH
-alias python="python3"
 PATH="/opt/homebrew/opt/gawk/libexec/gnubin:$PATH"
 export DEVKITPRO=/opt/devkitpro
 export DEVKITARM=/opt/devkitpro/devkitARM
 
 [ -f "/Users/bibek/.ghcup/env" ] && . "/Users/bibek/.ghcup/env" # ghcup-env
+
+### Bro
+export BRO_STATION=/Users/bibek/.bro
+export WORKSTATION=/Users/bibek/projects
+source /Users/bibek/.bro/activate
+
+# pnpm
+export PNPM_HOME="/Users/bibek/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

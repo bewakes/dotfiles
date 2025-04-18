@@ -13,3 +13,4 @@ export LDFLAGS="-L/opt/homebrew/opt/llvm/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/llvm/include"
 
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+export PATH="/opt/homebrew/opt/libpq/bin:$PATH"

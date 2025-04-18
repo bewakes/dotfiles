@@ -7,7 +7,7 @@ vim.g.mapleader = ';'
 
 -- global vars
 vim.g.loaded_python_provider = 0
-vim.g.python3_host_prog = '/Users/bibek/common_venv/bin/python'
+vim.g.python3_host_prog = '/Users/bibek/venv/bin/python3'
 
 -- global options
 o.shiftwidth = 4

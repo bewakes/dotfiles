@@ -31,6 +31,11 @@ local settings = {
             diagnostics = {
                 enable = true
             }
+        },
+        server = {
+            extraEnv = {
+                SKIP_GUEST_BUILD = "1",
+            }
         }
     }
 }
