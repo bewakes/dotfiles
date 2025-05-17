@@ -45,5 +45,6 @@ yabai -m rule --add app='^System Preferences$' manage=off
 yabai -m rule --add app='^System Settings$' manage=off
 yabai -m rule --add title='Preferences$' manage=off
 yabai -m rule --add title='Settings$' manage=off
+yabai -m rule --add app="^kitty$" manage=on border=off
 
 echo "yabai configuration loaded.."
