@@ -27,6 +27,7 @@ ACCOUNT_MAPPING = {
     'sastoshare': 'expenses:utils:sastoshare',
     'utils': 'expenses:utils',
     # Assets
+    'e': 'assets:esewa',
     'cash': 'assets:cash',
     'nimb': 'assets:bank:saving_nimb',
     'nabil': 'assets:bank:saving_nabil',
