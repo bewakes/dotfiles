@@ -30,5 +30,6 @@
   "vim-dirvish": { "branch": "master", "commit": "bbf53b30ca1e718625b9b84b1d32379e470ddad7" },
   "vim-fugitive": { "branch": "master", "commit": "46eaf8918b347906789df296143117774e827616" },
   "vim-rest-client": { "branch": "master", "commit": "dd89dda23dcc7812c98fc806f9782fcb7f885e99" },
-  "vim-stylishask": { "branch": "master", "commit": "4819e57980617eba24856ba6c0134596904ed901" }
+  "vim-stylishask": { "branch": "master", "commit": "4819e57980617eba24856ba6c0134596904ed901" },
+  "vim-table-mode": { "branch": "master", "commit": "4ff8de2ac93431ee6d85a9e04177012752e6abdc" }
 }

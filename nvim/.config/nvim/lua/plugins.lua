@@ -51,6 +51,9 @@ require("lazy").setup({
     'saadparwaiz1/cmp_luasnip',
     'rafamadriz/friendly-snippets',
 
+    -- table
+    {'dhruvasagar/vim-table-mode'},
+
     -- test
     {
       "nvim-neotest/neotest",
