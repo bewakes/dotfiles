@@ -116,7 +116,8 @@ alt - w : yabai -m window --close
 alt + shift - return : /Applications/kitty.app/Contents/MacOS/kitty --single-instance &
 
 # Scratchpad
-alt - return : toggle-scratchpad.sh
+alt - return : toggle-scratchpad.sh scratchpad
+alt + ctrl - return : toggle-scratchpad.sh llm
 
 
 # move managed window

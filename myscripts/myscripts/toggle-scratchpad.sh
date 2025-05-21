@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
-#!/bin/bash
-
-APP="kitty"
-TITLE="scratchpad"
+TITLE=$1
 
 yabai_winid() {
     yabai -m query --windows | jq -r \
@@ -11,11 +8,25 @@ yabai_winid() {
       '.[] | select(.app == "kitty" and .title == $title) | .id'
 }
 
+get_terminal_cmd() {
+    case "$1" in
+        "scratchpad")
+            echo nvim ~/scratchpad.md
+            ;;
+        "llm")
+            echo ollama run phi3
+            ;;
+        *)
+            echo bash
+            ;;
+    esac
+}
+
 run_for_yabai() {
     win_id=$(yabai_winid)
 
     if [ -z "$win_id" ]; then
-      open -na "kitty" --args --title "$TITLE" -e nvim ~/scratchpad
+      open -na "kitty" --args --title "$TITLE" -e `get_terminal_cmd $1`
       sleep 0.5  # Give it time to launch
 
       # Set it to float, center, and make sticky
@@ -25,7 +36,6 @@ run_for_yabai() {
         yabai -m window "$win_id" --scratchpad scratchpad
         yabai -m window "$win_id" --grid 20:100:0:0:80:8
         yabai -m window "$win_id" --scratchpad recover
-        yabai -m window "$win_id" --sticky "$win_id"
       fi
     else
       # If visible, minimize it; if minimized, restore it
@@ -35,7 +45,6 @@ run_for_yabai() {
       if [ "$is_minimized" = "true" ]; then
         yabai -m window  --deminimize "$win_id"
         yabai -m window  --focus "$win_id"
-        yabai -m window "$win_id" --sticky "$win_id"
       else
         yabai -m window  --minimize "$win_id"
       fi
@@ -43,4 +52,4 @@ run_for_yabai() {
 }
 
 # TODO; add support for other window managers
-run_for_yabai
+run_for_yabai $1
