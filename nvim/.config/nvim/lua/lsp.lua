@@ -1,6 +1,18 @@
 require("mason").setup()
 require("mason-lspconfig").setup({
-    ensure_installed = { "pyright", "ts_ls", "lua_ls", "clangd", "hls", "gopls" }
+    ensure_installed = { 
+        "pyright", 
+        "ts_ls", 
+        "lua_ls", 
+        "clangd", 
+        "hls", 
+        "gopls",
+        "jsonls",
+        "yamlls",
+        "bashls",
+        "marksman",
+        "taplo"
+    }
 })
 
 local lsp = require('lspconfig')
@@ -49,7 +61,20 @@ local settings = {
     }
 }
 
-local servers = { 'pyright', 'hls', 'gopls', 'ts_ls', 'rust_analyzer', 'lua_ls', 'clangd' }
+local servers = { 
+    'pyright', 
+    'hls', 
+    'gopls', 
+    'ts_ls', 
+    'rust_analyzer', 
+    'lua_ls', 
+    'clangd',
+    'jsonls',
+    'yamlls',
+    'bashls',
+    'marksman',
+    'taplo'
+}
 for _, server in pairs(servers) do
     lsp[server].setup{
         on_attach=ON_ATTACH,
