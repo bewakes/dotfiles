@@ -7,7 +7,7 @@ require'telescope'.setup{
                 ["<c-f>"] = require("telescope.actions").to_fuzzy_refine,
             },
             n = {
-                ["s"] = function(prompt_bufnr)
+                ["<leader>x"] = function(prompt_bufnr)
                     require("flash").jump({
                         pattern = "^",
                         label = { after = { 0, 0 } },
