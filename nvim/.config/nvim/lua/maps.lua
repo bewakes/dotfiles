@@ -1,60 +1,56 @@
-u = require('utils')
+local u = require('utils')
 
-local nmap = function (k, a)
-	vim.api.nvim_set_keymap('n', k, a, {})
-end
+local opts = { noremap = true, silent = true }
 
-local imap = function (k, a)
-	vim.api.nvim_set_keymap('i', k, a, {})
-end
+-- Insert mode mappings
+vim.keymap.set('i', '<leader>e', '<Esc>', opts)
+vim.keymap.set('i', '<leader>c', '<C-x><C-o>', opts)
 
-local map = function (k, a)
-	vim.api.nvim_set_keymap('', k, a, {})
-end
+-- Normal mode mappings
+vim.keymap.set('n', '<leader>q', ':q<CR>', opts)
+vim.keymap.set('n', '<leader>w', ':w<CR>', opts)
+vim.keymap.set('n', '<leader>gb', ':Git blame<CR>', opts)
+vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format, opts)
+vim.keymap.set('n', '<leader>lr', vim.lsp.buf.rename, opts)
+vim.keymap.set('n', '<leader>n', ':NERDTreeToggle<CR>', opts)
+vim.keymap.set('n', '<leader>bd', ':set background=dark<CR>', opts)
+vim.keymap.set('n', '<leader>bl', ':set background=light<CR>', opts)
+vim.keymap.set('n', '<leader>z', 'za', opts)
+vim.keymap.set('n', '<Tab>', 'gt', opts)
+vim.keymap.set('n', '<S-Tab>', 'gT', opts)
+vim.keymap.set('n', 'gv', '<C-o>', opts)
 
-imap('<leader>e', '<Esc>')
-imap('<leader>c', '<C-x><C-o>')
-nmap('<leader>q', ':q<CR>')
-nmap('<leader>w', ':w<CR>')
-map('<leader>g', ':Gen<CR>')
-nmap('<leader>lf', ':lua vim.lsp.buf.format()<CR>')
-nmap('<leader>lr', ':lua vim.lsp.buf.rename()<CR>')
-nmap('<leader>n', ':NERDTreeToggle<CR>')
-nmap('<leader>bd', ':set background=dark<CR>')
-nmap('<leader>bl', ':set background=light<CR>')
-nmap('<leader>z', 'za')
-nmap('<Tab>', 'gt')
-nmap('<S-Tab>', 'gT')
-nmap('gv', '<C-o>')
 -- Window commands
-nmap('<leader>h', '<C-w>h')
-nmap('<leader>j', '<C-w>j')
-nmap('<leader>k', '<C-w>k')
-nmap('<leader>l', '<C-w>l')
-nmap('<leader>=', '<C-w>=')
--- nb commands
-nmap('<Leader>ww', ':!nb browse <CR>')
-nmap('<Leader>wi', ':!nb browse %:p:h:t/%:t <CR>')
-nmap('<Leader>wt', ':e `="~/.nb/home/Journal/" . expand(strftime("%Y-%m-%d")) . ".md"` <CR>')
-nmap('<Leader>wm', ':e `="~/.nb/home/Journal/" . expand(strftime("%Y-%m")) . ".md"` <CR>')
--- nmap <Leader>wh :!nb export %:p:h:t/%:t ~/_site/%:t:r.html <CR>
-nmap('<leader>s', ':Telescope lsp_document_symbols<CR>')
+vim.keymap.set('n', '<leader>h', '<C-w>h', opts)
+vim.keymap.set('n', '<leader>j', '<C-w>j', opts)
+vim.keymap.set('n', '<leader>k', '<C-w>k', opts)
+vim.keymap.set('n', '<leader>l', '<C-w>l', opts)
+vim.keymap.set('n', '<leader>=', '<C-w>=', opts)
 
--- source
-nmap('<leader>i', ':e ~/.config/nvim/lua/<CR>')
+-- nb commands
+vim.keymap.set('n', '<Leader>ww', ':!nb browse <CR>', opts)
+vim.keymap.set('n', '<Leader>wi', ':!nb browse %:p:h:t/%:t <CR>', opts)
+vim.keymap.set('n', '<Leader>wt', ':e `="~/.nb/home/Journal/" . expand(strftime("%Y-%m-%d")) . ".md"` <CR>', opts)
+vim.keymap.set('n', '<Leader>wm', ':e `="~/.nb/home/Journal/" . expand(strftime("%Y-%m")) . ".md"` <CR>', opts)
+
+-- Telescope
+vim.keymap.set('n', '<leader>s', ':Telescope lsp_document_symbols<CR>', opts)
+
+-- Config editing
+vim.keymap.set('n', '<leader>i', ':e ~/.config/nvim/lua/<CR>', opts)
 
 -- Copying to clipboard
-vim.api.nvim_set_keymap('v', '<C-y>', '"+y', { noremap=true})
+vim.keymap.set('v', '<C-y>', '"+y', opts)
 
 -- Run files
-vim.cmd('nmap <leader>r :lua u.Run()<CR>')
+vim.keymap.set('n', '<leader>r', u.Run, opts)
 
--- dap
-nmap('<leader>db', "<cmd>lua require('dap').toggle_breakpoint()<CR>")
-nmap('<leader>dc', "<cmd>lua require('dap').continue()<CR>")
-nmap('<leader>dso', ":DapStepOver<CR>")
-nmap('<leader>dsi', ":DapStepInto<CR>")
+-- DAP (Debug Adapter Protocol)
+vim.keymap.set('n', '<leader>db', function() require('dap').toggle_breakpoint() end, opts)
+vim.keymap.set('n', '<leader>dc', function() require('dap').continue() end, opts)
+vim.keymap.set('n', '<leader>dso', ':DapStepOver<CR>', opts)
+vim.keymap.set('n', '<leader>dsi', ':DapStepInto<CR>', opts)
 
--- neotest
-nmap('<leader>tn', ":Neotest run<CR>")
-nmap('<leader>to', ":Neotest output<CR>")
+-- Neotest
+vim.keymap.set('n', '<leader>tn', ':Neotest run<CR>', opts)
+vim.keymap.set('n', '<leader>to', ':Neotest output<CR>', opts)

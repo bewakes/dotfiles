@@ -30,14 +30,13 @@ o.list = true  -- show invisible characters
 o.termguicolors = true
 o.title = true
 o.completeopt = 'menuone,longest,noinsert,noselect'
-o.pumblend = 10
 
 -- window-local options
 wo.number = true
 wo.wrap = false
 wo.foldmethod = 'indent'
 wo.foldenable = true
-wo.winblend = 10
+wo.winblend = 0
 
 -- buffer-local options
 bo.expandtab = true

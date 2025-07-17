@@ -1,6 +1,6 @@
 require("mason").setup()
 require("mason-lspconfig").setup({
-    ensure_installed = { "pyright", "tsserver", "lua_ls", "clangd", "hls" }
+    ensure_installed = { "pyright", "ts_ls", "lua_ls", "clangd", "hls", "gopls" }
 })
 
 local lsp = require('lspconfig')
@@ -17,6 +17,12 @@ local ON_ATTACH = function(client, bufnr)
     vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, {})
     vim.keymap.set('n', '<c-j>', vim.diagnostic.goto_next, {})
     vim.keymap.set('n', '<c-k>', vim.diagnostic.goto_prev, {})
+
+
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+      vim.lsp.handlers.hover,
+      { border = 'rounded' }
+    )
 end
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -36,11 +42,14 @@ local settings = {
             extraEnv = {
                 SKIP_GUEST_BUILD = "1",
             }
+        },
+        cargo = {
+            features = { "test_utils" }
         }
     }
 }
 
-local servers = { 'pyright', 'hls', 'gopls', 'tsserver', 'rust_analyzer', 'lua_ls', 'clangd' }
+local servers = { 'pyright', 'hls', 'gopls', 'ts_ls', 'rust_analyzer', 'lua_ls', 'clangd' }
 for _, server in pairs(servers) do
     lsp[server].setup{
         on_attach=ON_ATTACH,
@@ -56,8 +65,4 @@ vim.diagnostic.config({
     float = {
         border = 'rounded',
     },
-})
-
-vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-    border = "rounded"
 })
