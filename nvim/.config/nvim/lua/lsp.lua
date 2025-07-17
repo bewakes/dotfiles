@@ -17,9 +17,35 @@ require("mason-lspconfig").setup({
 
 local lsp = require('lspconfig')
 
+-- Set global border style for all floating windows
+local border_opts = {
+    border = 'rounded',
+    max_width = 80,
+    max_height = 20,
+}
+
+-- Configure LSP handlers globally
+vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
+    vim.lsp.handlers.hover,
+    border_opts
+)
+
+vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
+    vim.lsp.handlers.signature_help,
+    border_opts
+)
+
+-- Also set the default border for all floating windows
+local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
+function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
+    opts = opts or {}
+    opts.border = opts.border or 'rounded'
+    return orig_util_open_floating_preview(contents, syntax, opts, ...)
+end
+
 local ON_ATTACH = function(client, bufnr)
     -- Enable completion triggered by <c-x><c-o>
-    vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
+    vim.bo[bufnr].omnifunc = 'v:lua.vim.lsp.omnifunc'
 
     vim.keymap.set('n', 'K', vim.lsp.buf.hover, {})
     vim.keymap.set('n', 'ca', vim.lsp.buf.code_action, {})
@@ -29,12 +55,6 @@ local ON_ATTACH = function(client, bufnr)
     vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, {})
     vim.keymap.set('n', '<c-j>', vim.diagnostic.goto_next, {})
     vim.keymap.set('n', '<c-k>', vim.diagnostic.goto_prev, {})
-
-
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(
-      vim.lsp.handlers.hover,
-      { border = 'rounded' }
-    )
 end
 
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -89,5 +109,17 @@ end
 vim.diagnostic.config({
     float = {
         border = 'rounded',
+        source = 'always',
+        header = '',
+        prefix = '',
+        max_width = 80,
+        max_height = 20,
     },
+    virtual_text = {
+        prefix = '●',
+        source = 'if_many',
+    },
+    signs = true,
+    underline = true,
+    update_in_insert = false,
 })

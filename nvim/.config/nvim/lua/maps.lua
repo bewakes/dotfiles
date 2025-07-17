@@ -54,3 +54,12 @@ vim.keymap.set('n', '<leader>dsi', ':DapStepInto<CR>', opts)
 -- Neotest
 vim.keymap.set('n', '<leader>tn', ':Neotest run<CR>', opts)
 vim.keymap.set('n', '<leader>to', ':Neotest output<CR>', opts)
+
+-- Trouble (diagnostics)
+vim.keymap.set('n', '<leader>tt', ':Trouble<CR>', opts)
+vim.keymap.set('n', '<leader>tw', ':Trouble workspace_diagnostics<CR>', opts)
+vim.keymap.set('n', '<leader>td', ':Trouble document_diagnostics<CR>', opts)
+vim.keymap.set('n', '<leader>tq', ':Trouble quickfix<CR>', opts)
+
+-- Clear search highlighting
+vim.keymap.set('n', '<leader>/', ':nohlsearch<CR>', opts)

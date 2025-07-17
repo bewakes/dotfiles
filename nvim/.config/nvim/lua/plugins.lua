@@ -105,6 +105,32 @@ require("lazy").setup({
         "nvim-treesitter/nvim-treesitter"
       }
     },
+
+    -- Debug Adapter Protocol
+    {
+        'mfussenegger/nvim-dap',
+        dependencies = {
+            'rcarriga/nvim-dap-ui',
+            'nvim-neotest/nvim-nio',
+        },
+        config = function()
+            local dap = require('dap')
+            local dapui = require('dapui')
+            
+            dapui.setup()
+            
+            -- Auto-open/close DAP UI
+            dap.listeners.after.event_initialized['dapui_config'] = function()
+                dapui.open()
+            end
+            dap.listeners.before.event_terminated['dapui_config'] = function()
+                dapui.close()
+            end
+            dap.listeners.before.event_exited['dapui_config'] = function()
+                dapui.close()
+            end
+        end,
+    },
     -- haskell
     'alx741/vim-stylishask',
     'raichoo/haskell-vim',
@@ -139,6 +165,25 @@ require("lazy").setup({
         end,
     },
     {
+        'folke/trouble.nvim',
+        cmd = { 'Trouble', 'TroubleToggle' },
+        config = function()
+            require('trouble').setup({
+                icons = false,
+                fold_open = 'v',
+                fold_closed = '>',
+                indent_lines = false,
+                signs = {
+                    error = 'E',
+                    warning = 'W',
+                    hint = 'H',
+                    information = 'I',
+                    other = 'O',
+                },
+            })
+        end,
+    },
+    {
         'windwp/nvim-autopairs',
         event = 'InsertEnter',
         config = function()
@@ -148,23 +193,6 @@ require("lazy").setup({
                     lua = { 'string', 'source' },
                     javascript = { 'string', 'template_string' },
                     java = false,
-                },
-            })
-        end,
-    },
-    {
-        'lukas-reineke/indent-blankline.nvim',
-        main = 'ibl',
-        config = function()
-            require('ibl').setup({
-                indent = {
-                    char = '│',
-                    tab_char = '│',
-                },
-                scope = {
-                    enabled = true,
-                    show_start = true,
-                    show_end = true,
                 },
             })
         end,
