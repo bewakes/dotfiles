@@ -5,7 +5,27 @@ require'telescope'.setup{
                 ["<c-k>"] = require("telescope.actions").move_selection_previous,
                 ["<c-j>"] = require("telescope.actions").move_selection_next,
                 ["<c-f>"] = require("telescope.actions").to_fuzzy_refine,
-            }
+            },
+            n = {
+                ["s"] = function(prompt_bufnr)
+                    require("flash").jump({
+                        pattern = "^",
+                        label = { after = { 0, 0 } },
+                        search = {
+                            mode = "search",
+                            exclude = {
+                                function(win)
+                                    return vim.bo[vim.api.nvim_win_get_buf(win)].filetype ~= "TelescopeResults"
+                                end,
+                            },
+                        },
+                        action = function(match)
+                            local picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
+                            picker:set_selection(match.pos[1] - 1)
+                        end,
+                    })
+                end,
+            },
         },
         vimgrep_arguments = {
             'rg',

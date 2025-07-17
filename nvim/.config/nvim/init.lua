@@ -1,3 +1,6 @@
+-- Enable faster lua module loading
+vim.loader.enable()
+
 require('settings')
 require('plugins')
 require('utils')

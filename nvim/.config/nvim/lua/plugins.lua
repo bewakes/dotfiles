@@ -62,7 +62,19 @@ require("lazy").setup({
         keys = {
             { '<leader>s', ':Telescope lsp_document_symbols<CR>', desc = 'Document symbols' },
         },
-        dependencies = { 'nvim-lua/plenary.nvim' }
+        dependencies = { 
+            'nvim-lua/plenary.nvim',
+            {
+                'nvim-telescope/telescope-fzf-native.nvim',
+                build = 'make',
+                cond = function()
+                    return vim.fn.executable 'make' == 1
+                end,
+            },
+        },
+        config = function()
+            pcall(require('telescope').load_extension, 'fzf')
+        end,
     },
     'nvim-telescope/telescope-ui-select.nvim',
 
@@ -163,6 +175,44 @@ require("lazy").setup({
                 },
             })
         end,
+    },
+    {
+        'folke/flash.nvim',
+        event = 'VeryLazy',
+        opts = {
+            search = {
+                multi_window = true,
+                forward = true,
+                wrap = true,
+                mode = 'exact',
+            },
+            jump = {
+                jumplist = true,
+                pos = 'start',
+                history = false,
+            },
+            label = {
+                uppercase = true,
+                exclude = '',
+                current = true,
+            },
+            modes = {
+                search = {
+                    enabled = true,
+                },
+                char = {
+                    enabled = true,
+                    jump_labels = true,
+                },
+            },
+        },
+        keys = {
+            { 's', mode = { 'n', 'x', 'o' }, function() require('flash').jump() end, desc = 'Flash' },
+            { 'S', mode = { 'n', 'x', 'o' }, function() require('flash').treesitter() end, desc = 'Flash Treesitter' },
+            { 'r', mode = 'o', function() require('flash').remote() end, desc = 'Remote Flash' },
+            { 'R', mode = { 'o', 'x' }, function() require('flash').treesitter_search() end, desc = 'Treesitter Search' },
+            { '<c-s>', mode = { 'c' }, function() require('flash').toggle() end, desc = 'Toggle Flash Search' },
+        },
     },
     {
         'folke/trouble.nvim',
