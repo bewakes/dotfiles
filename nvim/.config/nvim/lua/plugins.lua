@@ -1,13 +1,13 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable", -- latest stable release
+        lazypath,
+    })
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -33,6 +33,18 @@ require("lazy").setup({
                 filters = {
                     dotfiles = true,
                 },
+                on_attach = function(bufnr)
+                    local api = require('nvim-tree.api')
+                    local opts = { buffer = bufnr, silent = true }
+
+                    -- Default mappings
+                    api.config.mappings.default_on_attach(bufnr)
+
+                    -- Custom mappings
+                    vim.keymap.set('n', 's', api.node.open.vertical, opts)
+                    vim.keymap.set('n', 'i', api.node.open.horizontal, opts)
+                    vim.keymap.set('n', 't', api.node.open.tab, opts)
+                end,
             })
         end,
     },
@@ -55,14 +67,14 @@ require("lazy").setup({
     'justinmk/vim-dirvish', -- directory viewer
     'nvim-lua/plenary.nvim',
     'nvim-lualine/lualine.nvim',
-    'nvim-treesitter/nvim-treesitter',  -- syntax highlighting
+    'nvim-treesitter/nvim-treesitter', -- syntax highlighting
     {
         'nvim-telescope/telescope.nvim',
         cmd = 'Telescope',
         keys = {
             { '<leader>s', ':Telescope lsp_document_symbols<CR>', desc = 'Document symbols' },
         },
-        dependencies = { 
+        dependencies = {
             'nvim-lua/plenary.nvim',
             {
                 'nvim-telescope/telescope-fzf-native.nvim',
@@ -84,38 +96,38 @@ require("lazy").setup({
         lazy = false,
         priority = 1000,
     },
-    { 
-        'rose-pine/neovim', 
+    {
+        'rose-pine/neovim',
         name = 'rose-pine',
         lazy = false,
         priority = 1000,
     },
 
     -- LSP
-    {'neovim/nvim-lspconfig'},
-    {"williamboman/mason.nvim", version = "^1.0.0"},
-    {"williamboman/mason-lspconfig.nvim", version = "^1.0.0"},
-    { "j-hui/fidget.nvim", opts = {} },
+    { 'neovim/nvim-lspconfig' },
+    { "williamboman/mason.nvim",           version = "^1.0.0" },
+    { "williamboman/mason-lspconfig.nvim", version = "^1.0.0" },
+    { "j-hui/fidget.nvim",                 opts = {} },
 
     -- Completion
-    {'hrsh7th/cmp-nvim-lsp'},
-    {'hrsh7th/nvim-cmp'},
-    {'L3MON4D3/LuaSnip'},
+    { 'hrsh7th/cmp-nvim-lsp' },
+    { 'hrsh7th/nvim-cmp' },
+    { 'L3MON4D3/LuaSnip' },
     'saadparwaiz1/cmp_luasnip',
     'rafamadriz/friendly-snippets',
 
     -- table
-    {'dhruvasagar/vim-table-mode'},
+    { 'dhruvasagar/vim-table-mode' },
 
     -- test
     {
-      "nvim-neotest/neotest",
-      dependencies = {
-        "nvim-neotest/nvim-nio",
-        "nvim-lua/plenary.nvim",
-        "antoinemadec/FixCursorHold.nvim",
-        "nvim-treesitter/nvim-treesitter"
-      }
+        "nvim-neotest/neotest",
+        dependencies = {
+            "nvim-neotest/nvim-nio",
+            "nvim-lua/plenary.nvim",
+            "antoinemadec/FixCursorHold.nvim",
+            "nvim-treesitter/nvim-treesitter"
+        }
     },
 
     -- Debug Adapter Protocol
@@ -128,9 +140,9 @@ require("lazy").setup({
         config = function()
             local dap = require('dap')
             local dapui = require('dapui')
-            
+
             dapui.setup()
-            
+
             -- Auto-open/close DAP UI
             dap.listeners.after.event_initialized['dapui_config'] = function()
                 dapui.open()
@@ -207,11 +219,11 @@ require("lazy").setup({
             },
         },
         keys = {
-            { '<leader>x', mode = { 'n', 'x', 'o' }, function() require('flash').jump() end, desc = 'Flash Jump' },
-            { '<leader>X', mode = { 'n', 'x', 'o' }, function() require('flash').treesitter() end, desc = 'Flash Treesitter' },
-            { '<leader>xr', mode = 'o', function() require('flash').remote() end, desc = 'Remote Flash' },
-            { '<leader>xR', mode = { 'o', 'x' }, function() require('flash').treesitter_search() end, desc = 'Treesitter Search' },
-            { '<c-s>', mode = { 'c' }, function() require('flash').toggle() end, desc = 'Toggle Flash Search' },
+            { '<leader>x',  mode = { 'n', 'x', 'o' }, function() require('flash').jump() end,              desc = 'Flash Jump' },
+            { '<leader>X',  mode = { 'n', 'x', 'o' }, function() require('flash').treesitter() end,        desc = 'Flash Treesitter' },
+            { '<leader>xr', mode = 'o',               function() require('flash').remote() end,            desc = 'Remote Flash' },
+            { '<leader>xR', mode = { 'o', 'x' },      function() require('flash').treesitter_search() end, desc = 'Treesitter Search' },
+            { '<c-s>',      mode = { 'c' },           function() require('flash').toggle() end,            desc = 'Toggle Flash Search' },
         },
     },
     {
