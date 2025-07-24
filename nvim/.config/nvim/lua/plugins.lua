@@ -24,6 +24,11 @@ require("lazy").setup({
         dependencies = { 'nvim-tree/nvim-web-devicons' },
         config = function()
             require('nvim-tree').setup({
+                disable_netrw = false,
+                hijack_netrw = false,
+                hijack_directories = {
+                    enable = false,
+                },
                 view = {
                     width = 30,
                 },
