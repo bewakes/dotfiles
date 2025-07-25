@@ -55,6 +55,14 @@ require("lazy").setup({
     },
     'tpope/vim-fugitive',
     {
+        'kdheepak/lazygit.nvim',
+        cmd = 'LazyGit',
+        keys = {
+            { '<leader>gg', ':LazyGit<CR>', desc = 'Open LazyGit' },
+        },
+        dependencies = { 'nvim-lua/plenary.nvim' },
+    },
+    {
         'lewis6991/gitsigns.nvim',
         event = { 'BufReadPre', 'BufNewFile' },
         config = function()

@@ -10,6 +10,7 @@
   "gruvbox.nvim": { "branch": "main", "commit": "cc202a7c5e5ffca06f92a04073275dec371cbfe3" },
   "haskell-vim": { "branch": "master", "commit": "b1ac46807835423c4a4dd063df6d5b613d89c731" },
   "lazy.nvim": { "branch": "main", "commit": "6c3bda4aca61a13a9c63f1c1d1b16b9d3be90d7a" },
+  "lazygit.nvim": { "branch": "main", "commit": "cdd3527e251f96eb0527162b156ad839286fcd97" },
   "lualine.nvim": { "branch": "master", "commit": "15884cee63a8c205334ab13ab1c891cd4d27101a" },
   "mason-lspconfig.nvim": { "branch": "main", "commit": "b9084b1f42f790d6230dc66dbcb6bcc35b148552" },
   "mason.nvim": { "branch": "main", "commit": "9c9416817c9f4e6f333c749327a1ed5355cfab61" },
