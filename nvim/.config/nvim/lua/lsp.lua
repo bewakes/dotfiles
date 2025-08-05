@@ -2,6 +2,7 @@ require("mason").setup()
 require("mason-lspconfig").setup({
     ensure_installed = { 
         "pyright", 
+        "ruff",
         "ts_ls", 
         "lua_ls", 
         "clangd", 
@@ -83,6 +84,7 @@ local settings = {
 
 local servers = { 
     'pyright', 
+    'ruff',
     'hls', 
     'gopls', 
     'ts_ls', 
