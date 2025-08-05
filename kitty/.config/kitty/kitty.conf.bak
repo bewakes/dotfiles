@@ -24,8 +24,9 @@
 #:     italic_font      Operator Mono Book Italic
 #:     bold_italic_font Operator Mono Medium Italic
 
-font_size 12.0
-font_family lekton
+font_size 13
+# font_family Input Mono Narrow
+font_family Input Mono Narrow
 
 #: Font size (in pts)
 
@@ -1538,6 +1539,8 @@ font_family lekton
 #: finally you can use an arbitrary color, such as #12af59 or red.
 
 # macos_titlebar_color system
+# startup_session fullscreen
+# macos_hide_titlebar yes
 
 #: The color of the kitty window's titlebar on macOS. A value of
 #: system means to use the default system color, light or dark can
@@ -2404,7 +2407,7 @@ font_family lekton
 
 
 # BEGIN_KITTY_THEME
-# Everforest Dark Hard
+# Everforest Light Soft
 include current-theme.conf
 # END_KITTY_THEME
 
