@@ -16,41 +16,18 @@ require("lazy").setup({
 
     -- utils
     {
-        'nvim-tree/nvim-tree.lua',
-        cmd = { 'NvimTreeToggle', 'NvimTreeOpen', 'NvimTreeFocus' },
+        'preservim/nerdtree',
+        cmd = { 'NERDTreeToggle', 'NERDTreeFocus', 'NERDTree' },
         keys = {
-            { '<leader>n', ':NvimTreeToggle<CR>', desc = 'Toggle file tree' },
+            { '<leader>n', ':NERDTreeToggle<CR>', desc = 'Toggle file tree' },
         },
-        dependencies = { 'nvim-tree/nvim-web-devicons' },
         config = function()
-            require('nvim-tree').setup({
-                disable_netrw = false,
-                hijack_netrw = false,
-                hijack_directories = {
-                    enable = false,
-                },
-                view = {
-                    width = 30,
-                },
-                renderer = {
-                    group_empty = true,
-                },
-                filters = {
-                    dotfiles = true,
-                },
-                on_attach = function(bufnr)
-                    local api = require('nvim-tree.api')
-                    local opts = { buffer = bufnr, silent = true }
-
-                    -- Default mappings
-                    api.config.mappings.default_on_attach(bufnr)
-
-                    -- Custom mappings
-                    vim.keymap.set('n', 's', api.node.open.vertical, opts)
-                    vim.keymap.set('n', 'i', api.node.open.horizontal, opts)
-                    vim.keymap.set('n', 't', api.node.open.tab, opts)
-                end,
-            })
+            vim.g.NERDTreeWinSize = 30
+            vim.g.NERDTreeShowHidden = 0
+            vim.g.NERDTreeIgnore = {'\\.git$', '\\.DS_Store$'}
+            vim.g.NERDTreeMapOpenSplit = 'i'
+            vim.g.NERDTreeMapOpenVSplit = 's'
+            vim.g.NERDTreeMapOpenInTab = 't'
         end,
     },
     'tpope/vim-fugitive',
@@ -200,44 +177,6 @@ require("lazy").setup({
                 },
             })
         end,
-    },
-    {
-        'folke/flash.nvim',
-        event = 'VeryLazy',
-        opts = {
-            search = {
-                multi_window = true,
-                forward = true,
-                wrap = true,
-                mode = 'exact',
-            },
-            jump = {
-                jumplist = true,
-                pos = 'start',
-                history = false,
-            },
-            label = {
-                uppercase = true,
-                exclude = '',
-                current = true,
-            },
-            modes = {
-                search = {
-                    enabled = true,
-                },
-                char = {
-                    enabled = true,
-                    jump_labels = true,
-                },
-            },
-        },
-        keys = {
-            { '<leader>x',  mode = { 'n', 'x', 'o' }, function() require('flash').jump() end,              desc = 'Flash Jump' },
-            { '<leader>X',  mode = { 'n', 'x', 'o' }, function() require('flash').treesitter() end,        desc = 'Flash Treesitter' },
-            { '<leader>xr', mode = 'o',               function() require('flash').remote() end,            desc = 'Remote Flash' },
-            { '<leader>xR', mode = { 'o', 'x' },      function() require('flash').treesitter_search() end, desc = 'Treesitter Search' },
-            { '<c-s>',      mode = { 'c' },           function() require('flash').toggle() end,            desc = 'Toggle Flash Search' },
-        },
     },
     {
         'folke/trouble.nvim',

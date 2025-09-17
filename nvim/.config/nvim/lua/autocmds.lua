@@ -27,6 +27,10 @@ vim.api.nvim_create_autocmd('BufWritePre', {
   pattern = format_filetypes,
   group = 'AutoFormatting',
   callback = function()
+    -- Skip formatting for dirvish buffers
+    if vim.bo.filetype == 'dirvish' then
+      return
+    end
     vim.lsp.buf.format({ async = true })
   end,
 })
