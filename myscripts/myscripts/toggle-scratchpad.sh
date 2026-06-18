@@ -11,7 +11,7 @@ yabai_winid() {
 get_terminal_cmd() {
     case "$1" in
         "scratchpad")
-            echo nvim ~/scratchpad.md
+            echo nvim ~/.nb/work/scratchpad.md
             ;;
         "llm")
             echo ollama run phi3
@@ -34,8 +34,8 @@ run_for_yabai() {
 
       if [ -n "$win_id" ]; then
         yabai -m window "$win_id" --scratchpad scratchpad
-        yabai -m window "$win_id" --grid 20:100:0:0:80:8
-        yabai -m window "$win_id" --scratchpad recover
+        yabai -m window "$win_id" --resize abs:900:350
+        yabai -m window "$win_id" --move abs:0:0
       fi
     else
       # If visible, minimize it; if minimized, restore it
